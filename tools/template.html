@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>The Secret of the Ages: “Watering of the Tree of Life”</title>
+  <meta name="description" content="A message of purpose and healing from the story ‘written in light’ as reflected from the stars above. Presented by Christopher Nairb.">
+  <meta name="theme-color" content="#1d1a3a">
+  <link rel="icon" type="image/webp" href="art/p01.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Cormorant+SC:wght@500;600;700&family=League+Spartan:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1d1a3a;
+      --gold: #c2873f;
+      --cream: #f6e3b4;
+      --page-w: 1728;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: #100e22;
+      color: var(--cream);
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* Top bar: book title and a page picker */
+    .bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
+      background: rgba(16, 14, 34, 0.88);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(194, 135, 63, 0.35);
+    }
+    .bar-title {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bar select {
+      font-family: inherit;
+      font-size: 0.8rem;
+      color: var(--cream);
+      background: rgba(29, 26, 58, 0.9);
+      border: 1px solid rgba(194, 135, 63, 0.5);
+      border-radius: 8px;
+      padding: 6px 8px;
+      max-width: 55vw;
+    }
+
+    /* One book page */
+    .page {
+      scroll-margin-top: 56px;
+      padding: 24px 0;
+      display: flex;
+      justify-content: center;
+    }
+    .sheet {
+      position: relative;
+      width: min(100%, 900px);
+      aspect-ratio: 1728 / 2304;
+      container-type: inline-size;
+      background: var(--ink);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    }
+    .art {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Text boxes placed exactly as in Canva, sized relative to the page width */
+    .full { display: none; }
+
+    .tb {
+      position: absolute;
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      transform-origin: top left;
+      /* The box's own size follows its text, so line spacing matches Canva */
+      font-size: calc(var(--fs) / var(--page-w) * 100cqw * var(--k, 1));
+    }
+    .tb span {
+      font-size: calc(var(--fs) / var(--page-w) * 100cqw * var(--k, 1));
+    }
+    .tb.verse { white-space: pre; }
+    .tb.one-line { white-space: nowrap; }
+    .f-body  { font-family: 'Cormorant SC', 'Cinzel', serif; }
+    .f-title { font-family: 'Cinzel', serif; font-weight: 800; }
+    .f-sans  { font-family: 'League Spartan', 'Helvetica Neue', sans-serif; }
+
+    /* Phones: same words and artwork, reflowed into a readable column */
+    @media (max-width: 700px) {
+      .page { padding: 0; }
+      .sheet {
+        width: 100%;
+        aspect-ratio: auto;
+        min-height: 100svh;
+        padding: 40px 18px 56px;
+        display: flex;
+        flex-direction: column;
+        gap: 1.4em;
+        box-shadow: none;
+        border-bottom: 1px solid rgba(194, 135, 63, 0.25);
+      }
+      .art { opacity: 0.45; }
+      .sheet::after {
+        /* Soft darkening so text stays readable over the artwork */
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(rgba(16, 14, 34, 0.35), rgba(16, 14, 34, 0.55));
+        pointer-events: none;
+      }
+      .tb {
+        position: relative;
+        z-index: 1;
+        top: auto !important;
+        left: auto !important;
+        width: auto !important;
+        transform: none !important;
+        white-space: pre-wrap !important;
+      }
+      .tb, .tb span {
+        font-size: clamp(0.82rem, calc(0.62rem + var(--fs) * 0.0185rem), 2.3rem);
+      }
+
+      /* Diagram pages stay a picture, shown at full width */
+      .page-image .sheet {
+        aspect-ratio: 1728 / 2304;
+        min-height: 0;
+        padding: 0;
+      }
+      .page-image .art { opacity: 1; }
+      .page-image .sheet::after { display: none; }
+
+      /* Art-only pages keep the book's proportions */
+      .page-art .sheet {
+        aspect-ratio: 1728 / 2304;
+        min-height: 0;
+        padding: 0;
+      }
+      .page-art .art { opacity: 1; }
+      .page-art .sheet::after { display: none; }
+
+      /* Diagram pages: full picture first, then the words below it */
+      .page-diagram .sheet { padding-top: 0; min-height: 0; }
+      .page-diagram .full {
+        display: block;
+        position: relative;
+        z-index: 1;
+        width: calc(100% + 36px);
+        margin: 0 -18px 8px;
+      }
+      .page-diagram .art { display: none; }
+      .page-diagram .sheet::after { display: none; }
+    }
+
+    /* Disclaimer */
+    .note {
+      max-width: 760px;
+      margin: 24px auto 48px;
+      padding: 14px 18px;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      text-align: center;
+      border: 1px solid rgba(194, 135, 63, 0.4);
+      border-radius: 12px;
+      background: rgba(194, 135, 63, 0.08);
+    }
+    @media (max-width: 700px) {
+      .note { margin: 24px 16px 40px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <span class="bar-title">THE SECRET OF THE AGES</span>
+    <select id="toc" aria-label="Go to page">{{TOC}}</select>
+  </header>
+
+  <main>
+{{PAGES}}
+  </main>
+
+  <p class="note">
+    <strong>Disclaimer:</strong> The code of this site is AI generated. All of the ideas, words and artwork in this book are human made.
+  </p>
+
+  <script>
+    // Page picker jumps to the chosen page, and follows along as you scroll
+    const toc = document.getElementById('toc');
+    toc.addEventListener('change', () => {
+      document.getElementById(toc.value).scrollIntoView({ behavior: 'smooth' });
+    });
+    const seen = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) toc.value = e.target.id; });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('.page').forEach(p => seen.observe(p));
+
+    // The web fonts run slightly wider than Canva's, so on wide screens each text
+    // box is scaled down just enough to fit the same space it has in the book
+    function fitText() {
+      const wide = window.innerWidth > 700;
+      document.querySelectorAll('.tb').forEach(tb => {
+        tb.style.setProperty('--k', 1);
+        if (!wide) return;
+        const sheet = tb.closest('.sheet');
+        const room = parseFloat(getComputedStyle(tb).getPropertyValue('--h')) * sheet.clientHeight;
+        let k = 1;
+        const keepLines = tb.classList.contains('one-line') || tb.classList.contains('verse');
+        while (k > 0.6 && (tb.scrollHeight > room * 1.04 || (keepLines && tb.scrollWidth > tb.clientWidth + 1))) {
+          k -= 0.01;
+          tb.style.setProperty('--k', k.toFixed(2));
+        }
+      });
+    }
+    document.fonts.ready.then(fitText);
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(fitText, 150);
+    });
+  </script>
+</body>
+</html>

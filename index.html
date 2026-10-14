@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>The Secret of the Ages: “Watering of the Tree of Life”</title>
+  <meta name="description" content="A message of purpose and healing from the story ‘written in light’ as reflected from the stars above. Presented by Christopher Nairb.">
+  <meta name="theme-color" content="#1d1a3a">
+  <link rel="icon" type="image/webp" href="art/p01.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Cormorant+SC:wght@500;600;700&family=League+Spartan:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1d1a3a;
+      --gold: #c2873f;
+      --cream: #f6e3b4;
+      --page-w: 1728;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: #100e22;
+      color: var(--cream);
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* Top bar: book title and a page picker */
+    .bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
+      background: rgba(16, 14, 34, 0.88);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(194, 135, 63, 0.35);
+    }
+    .bar-title {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bar select {
+      font-family: inherit;
+      font-size: 0.8rem;
+      color: var(--cream);
+      background: rgba(29, 26, 58, 0.9);
+      border: 1px solid rgba(194, 135, 63, 0.5);
+      border-radius: 8px;
+      padding: 6px 8px;
+      max-width: 55vw;
+    }
+
+    /* One book page */
+    .page {
+      scroll-margin-top: 56px;
+      padding: 24px 0;
+      display: flex;
+      justify-content: center;
+    }
+    .sheet {
+      position: relative;
+      width: min(100%, 900px);
+      aspect-ratio: 1728 / 2304;
+      container-type: inline-size;
+      background: var(--ink);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    }
+    .art {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Text boxes placed exactly as in Canva, sized relative to the page width */
+    .full { display: none; }
+
+    .tb {
+      position: absolute;
+      margin: 0;
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      transform-origin: top left;
+      /* The box's own size follows its text, so line spacing matches Canva */
+      font-size: calc(var(--fs) / var(--page-w) * 100cqw * var(--k, 1));
+    }
+    .tb span {
+      font-size: calc(var(--fs) / var(--page-w) * 100cqw * var(--k, 1));
+    }
+    .tb.verse { white-space: pre; }
+    .tb.one-line { white-space: nowrap; }
+    .f-body  { font-family: 'Cormorant SC', 'Cinzel', serif; }
+    .f-title { font-family: 'Cinzel', serif; font-weight: 800; }
+    .f-sans  { font-family: 'League Spartan', 'Helvetica Neue', sans-serif; }
+
+    /* Phones: same words and artwork, reflowed into a readable column */
+    @media (max-width: 700px) {
+      .page { padding: 0; }
+      .sheet {
+        width: 100%;
+        aspect-ratio: auto;
+        min-height: 100svh;
+        padding: 40px 18px 56px;
+        display: flex;
+        flex-direction: column;
+        gap: 1.4em;
+        box-shadow: none;
+        border-bottom: 1px solid rgba(194, 135, 63, 0.25);
+      }
+      .art { opacity: 0.45; }
+      .sheet::after {
+        /* Soft darkening so text stays readable over the artwork */
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(rgba(16, 14, 34, 0.35), rgba(16, 14, 34, 0.55));
+        pointer-events: none;
+      }
+      .tb {
+        position: relative;
+        z-index: 1;
+        top: auto !important;
+        left: auto !important;
+        width: auto !important;
+        transform: none !important;
+        white-space: pre-wrap !important;
+      }
+      .tb, .tb span {
+        font-size: clamp(0.82rem, calc(0.62rem + var(--fs) * 0.0185rem), 2.3rem);
+      }
+
+      /* Diagram pages stay a picture, shown at full width */
+      .page-image .sheet {
+        aspect-ratio: 1728 / 2304;
+        min-height: 0;
+        padding: 0;
+      }
+      .page-image .art { opacity: 1; }
+      .page-image .sheet::after { display: none; }
+
+      /* Art-only pages keep the book's proportions */
+      .page-art .sheet {
+        aspect-ratio: 1728 / 2304;
+        min-height: 0;
+        padding: 0;
+      }
+      .page-art .art { opacity: 1; }
+      .page-art .sheet::after { display: none; }
+
+      /* Diagram pages: full picture first, then the words below it */
+      .page-diagram .sheet { padding-top: 0; min-height: 0; }
+      .page-diagram .full {
+        display: block;
+        position: relative;
+        z-index: 1;
+        width: calc(100% + 36px);
+        margin: 0 -18px 8px;
+      }
+      .page-diagram .art { display: none; }
+      .page-diagram .sheet::after { display: none; }
+    }
+
+    /* Disclaimer */
+    .note {
+      max-width: 760px;
+      margin: 24px auto 48px;
+      padding: 14px 18px;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      text-align: center;
+      border: 1px solid rgba(194, 135, 63, 0.4);
+      border-radius: 12px;
+      background: rgba(194, 135, 63, 0.08);
+    }
+    @media (max-width: 700px) {
+      .note { margin: 24px 16px 40px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <span class="bar-title">THE SECRET OF THE AGES</span>
+    <select id="toc" aria-label="Go to page"><option value="p01">1 · Front Cover</option><option value="p04">4 · Judgement</option><option value="p05">5 · Interpretations</option><option value="p06">6 · Programming Subconscious Mind</option><option value="p07">7 · Message Of / From</option><option value="p08">8 · Hereby Presenting</option><option value="p09">9 · Shield</option><option value="p10">10 · Shield</option><option value="p11">11 · Shield</option><option value="p12">12 · Man And His Sword</option><option value="p13">13 · Dedication / Credits</option><option value="p14">14 · Poem</option><option value="p15">15 · Poem</option><option value="p16">16 · Self / All</option><option value="p17">17 · Hook / Story</option><option value="p18">18 · Guiding Star</option><option value="p19">19 · Intro</option><option value="p20">20 · Message From Chosen One</option><option value="p21">21 · Brian&#x27;S Message Of Protection</option><option value="p22">22 · Harmony</option><option value="p23">23 · Consciousness</option><option value="p24">24 · Allegorical Truth</option><option value="p25">25 · Message - Col</option><option value="p26">26 · 3 Pillars - Harmony</option><option value="p27">27 · 3 Pillars Of Being</option><option value="p28">28 · Floormap Of Eternal Temple</option><option value="p29">29 · Secret Of The Ages / Realms</option><option value="p31">31 · 9 Points Of Manipulation Of The Nodes Of The Eyes</option><option value="p32">32 · 3 Pillars - Brian</option></select>
+  </header>
+
+  <main>
+<section class="page" id="p01" aria-label="Front Cover"><div class="sheet"><img class="art" src="art/p01.webp" alt="" loading="eager"><div class="tb one-line" style="top:1.6273%;left:0.9843%;width:98.0315%;text-align:center;line-height:1.25;--fs:32.00;--h:0.01667"><span class="f-body" style="--fs:32.00;color:#f6e3b4;font-style:italic;font-weight:700">“A MESSAGE OF PURPOSE AND HEALING FROM THE STORY ‘WRITTEN IN LIGHT’ AS REFLECTED FROM THE STARS ABOVE...”</span></div><div class="tb one-line" style="top:4.4659%;left:0.9658%;width:98.0683%;text-align:center;line-height:0.98;--fs:117.33;--h:0.06068"><span class="f-title" style="--fs:117.33;color:#c2873f;font-weight:700">THE SECRET OF THE AGES:</span></div><div class="tb one-line" style="top:9.4469%;left:1.4207%;width:97.1586%;text-align:center;line-height:1.06;--fs:96.01;--h:0.04967"><span class="f-body" style="--fs:96.01;color:#c2cdff;font-style:italic;font-weight:700">“WATERING OF THE TREE OF LIFE”</span></div><div class="tb" style="top:14.4139%;left:1.4207%;width:97.1586%;text-align:center;line-height:1.4;--fs:31.53;--h:0.05455"><span class="f-body" style="--fs:31.53;color:#f6e3b4;font-style:italic;font-weight:700">RECONCILIATION OF ANCIENT WISDOM AND MODERN SCIENCE: PROCESSES AND METHODS OF </span><span class="f-body" style="--fs:31.53;color:#f6e3b4;font-weight:700">CONSCIOUS directION OF innervation FOR THE ACTIVATION OF THE COMPONENTS OF brain AND body to accelerate healing, increase awareness AND UNLOCK ALL ASPECTS OF SELF.</span></div><div class="tb one-line" style="top:97.8276%;left:15.6517%;width:10.6265%;text-align:left;line-height:1.22;--fs:21.49;--h:0.01110"><span class="f-body" style="--fs:21.49;color:#c2873f;font-style:italic;font-weight:700">PRESENTED BY: </span></div><div class="tb one-line" style="top:97.7423%;left:68.2899%;width:15.5481%;text-align:right;line-height:1.22;--fs:25.05;--h:0.01280"><span class="f-body" style="--fs:25.05;color:#f6e3b4;font-weight:700">CHRISTOPHER NAIRB</span></div></div></section>
+<section class="page" id="p04" aria-label="Judgement"><div class="sheet"><img class="art" src="art/p04.webp" alt="" loading="lazy"><div class="tb one-line" style="top:1.7019%;left:-0.2799%;width:100.5598%;text-align:center;line-height:1.4;--fs:75.39;--h:0.03903"><span class="f-body" style="--fs:75.39;color:#c2873f;font-style:italic;font-weight:700">WHEN JESUS TRIED TO TEACH ALL IS REFLECTED</span></div><div class="tb" style="top:7.1688%;left:25.5698%;width:48.8604%;text-align:left;line-height:1.4;--fs:28.72;--h:0.06690"><span class="f-body" style="--fs:28.72;color:#f6e3b4;font-weight:700">Matthew 7:1-2
+</span><span class="f-body" style="--fs:28.72;color:#c2873f;font-style:italic;font-weight:700">1 Do not judge, or you too will be judged. 
+2 For in the same way you judge others, you will be judged, and with the     measure you use, it will be measured to you.</span></div><div class="tb" style="top:15.4227%;left:2.4743%;width:95.0514%;text-align:left;line-height:1.4;--fs:26.83;--h:0.82086"><span class="f-body" style="--fs:54.67;color:#f6e3b4;font-style:italic;font-weight:700">THE WAY TO LIVE free of fear AND INSECURITY: 
+</span><span class="f-body" style="--fs:26.83;color:#c2873f;font-weight:700">
+Though the word “judge” certainly evokes the idea of judgement and thus in a biblical context “judgement day”  In looking past this oversight and understanding the words of Jesus in Matthew FOR WHAT THEY ARE, as tools and ways to use the SUBCONSCIOUS mind, AND WHAT HE TRIED TO EXPRESS we MAY UNDERSTAND AND GROW FROM WHAT JESUS WAS TRYING TO CONVEY.
+
+</span><span class="f-body" style="--fs:42.67;color:#f6e3b4;font-style:italic;font-weight:700">LET IT BE MADE CLEAR THAT what Jesus meant was that if you judge others then you BELIEVE others will judge you and thus YOUR INSECURITY CORRESPONDS TO HOW MUCH YOU JUDGE OTHERS.
+
+LET IT THEN BE SAID THAT WHAT WAS MEANT IS THAT THE WORLD IS A MIRROR.
+</span><span class="f-body" style="--fs:42.67;color:#c2873f;font-weight:700">
+</span><span class="f-body" style="--fs:42.67;color:#f6e3b4;font-style:italic;font-weight:700">if you do not judge others and allow them to exist as the person they are then you yourself will assume that others are doing the same. THIS WILL HELP YOU feel secure and confident in ALL THAT YOU ARE.
+</span><span class="f-body" style="--fs:26.83;color:#c2873f;font-weight:700">
+If you sort of judge people a little then you’ll be a little insecure about some THINGS.
+
+If you judge a lot of people on a lot of things then you yourself will feel as if others are worried about you and your actions and thEN YOUR ACT MAY BECOME ALIGNED WITH THAT WHICH YOU </span><span class="f-body" style="--fs:26.83;color:#c2873f;font-style:italic;font-weight:700">THINK</span><span class="f-body" style="--fs:26.83;color:#c2873f;font-weight:700"> OTHERS WANT FROM YOU AND NOT WHAT YOU KNOW IN YOUR HEART YOU SHOULD DO. THIS IS INTEGRITY.
+
+</span><span class="f-body" style="--fs:42.67;color:#f6e3b4;font-style:italic;font-weight:700">It is more important for you to do what you KNOW you are to do than to do what you THINK others WANT or EXPECT from you.
+</span><span class="f-body" style="--fs:26.83;color:#c2873f;font-weight:700">
+people are not THINKING about you and your actions and judging or worrying about you, and if for whatever reason they are, it is their loss of time and energy and does nothing but prevent them on focusing energy and thought to where it ought to be. 
+
+People have their own lives and are more focused on living that than what you are up to. 
+
+To live your life within the CONSTRAINTS OF THE BOX of fear AND INSECURITY YOU’VE BUILT THROUGH YOUR OWN JUDGEMENT OF OTHERS IS TO NOT LIVE AT ALL.
+
+SO TAKE WHAT IS YOURS AND KEEP IT INTO YOU AND DO NOT CAST YOUR PEARL BEFORE SWINE, THAT BEING YOU, AS A HIGHER MAN, SHOULD IGNORE THE ATTEMPTS TO WASTE AND DESTROY TIME AND ENERGY ON THAT WHICH CONCERNS A LOWER MAN. FOR HIS CONCERNS, REAL TO HIM, ARE USUALLY NOT REAL AT ALL.
+
+</span><span class="f-body" style="--fs:42.67;color:#f6e3b4;font-style:italic;font-weight:700">This idea extends beyond just the freedom of others worries about you but applies in all manners of life; the world is a mirror and the outside is no more than a product of the inside. </span></div></div></section>
+<section class="page" id="p05" aria-label="Interpretations"><div class="sheet"><img class="art" src="art/p05.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.9339%;left:36.1102%;width:27.7796%;text-align:center;line-height:1.4;--fs:55.51;--h:0.02860"><span class="f-body" style="--fs:55.51;color:#f6e3b4;font-style:italic;font-weight:700">INTERPRETATIONS::</span></div><div class="tb" style="top:7.0845%;left:2.3970%;width:46.1111%;text-align:center;line-height:1.4;--fs:44.00;--h:0.04913"><span class="f-body" style="--fs:44.00;color:#c2873f;font-style:italic;font-weight:700">“Blessed are the poor in spirit, for theirs is the kingdom of heaven. “</span></div><div class="tb" style="top:7.8808%;left:50.9209%;width:46.2932%;text-align:right;line-height:1.4;--fs:29.33;--h:0.03304"><span class="f-body" style="--fs:29.33;color:#f6e3b4;font-weight:700">Blessed are the lost souls FOR IT IS WHEN LOST THAT THEN THEY MAY FIND. </span></div><div class="tb" style="top:18.5637%;left:2.3970%;width:46.1111%;text-align:center;line-height:1.4;--fs:44.00;--h:0.04913"><span class="f-body" style="--fs:44.00;color:#c2873f;font-style:italic;font-weight:700">“Blessed are those who mourn, for they will be comforted.”</span></div><div class="tb" style="top:18.5637%;left:50.9209%;width:46.2932%;text-align:right;line-height:1.4;--fs:29.33;--h:0.05084"><span class="f-body" style="--fs:29.33;color:#f6e3b4;font-weight:700">Blessed are the lonely because WHENEVER THEY MAY ACCEPT IT THEY ARE in the ever loving Hand of God.</span></div><div class="tb" style="top:30.0428%;left:2.3970%;width:46.1111%;text-align:center;line-height:1.4;--fs:44.00;--h:0.04913"><span class="f-body" style="--fs:44.00;color:#c2873f;font-style:italic;font-weight:700">“Blessed are the meek for they shall inherit the earth.”</span></div><div class="tb" style="top:29.9575%;left:51.4151%;width:46.2932%;text-align:right;line-height:1.4;--fs:29.33;--h:0.05084"><span class="f-body" style="--fs:29.33;color:#f6e3b4;font-weight:700">Blessed are those who wield strength of God and choose to bring Heaven to Earth and not Hell. These men are the coming kings. </span></div><div class="tb" style="top:41.5220%;left:2.3970%;width:46.1111%;text-align:center;line-height:1.4;--fs:44.00;--h:0.07561"><span class="f-body" style="--fs:44.00;color:#c2873f;font-style:italic;font-weight:700">“Blessed are those who hunger and thirst for righteousness, for they will be filled. “</span></div><div class="tb" style="top:43.6502%;left:50.9209%;width:46.2932%;text-align:right;line-height:1.4;--fs:29.33;--h:0.03304"><span class="f-body" style="--fs:29.33;color:#f6e3b4;font-weight:700">Blessed are the ones who seek to know GOD for GOD will show HIMself to them.</span></div><div class="tb" style="top:55.6487%;left:2.3970%;width:46.1111%;text-align:center;line-height:1.4;--fs:44.00;--h:0.04913"><span class="f-body" style="--fs:44.00;color:#c2873f;font-style:italic;font-weight:700">“Blessed are the pure in heart for they will see God.”</span></div><div class="tb" style="top:55.6810%;left:51.4151%;width:46.2932%;text-align:right;line-height:1.4;--fs:29.33;--h:0.05084"><span class="f-body" style="--fs:29.33;color:#f6e3b4;font-weight:700">Though some do not know God, they act in line with God, and will thus come to understand God.</span></div><div class="tb" style="top:67.1279%;left:2.3970%;width:46.1111%;text-align:center;line-height:1.4;--fs:44.00;--h:0.04913"><span class="f-body" style="--fs:44.00;color:#c2873f;font-style:italic;font-weight:700">“Blessed are peacemakers for they will be called the children of God.”</span></div><div class="tb" style="top:67.9323%;left:50.9209%;width:46.2932%;text-align:right;line-height:1.4;--fs:29.33;--h:0.03304"><span class="f-body" style="--fs:29.33;color:#f6e3b4;font-weight:700">There is no reason for war amongst men as all men arE ALL SIBLINGS..</span></div><div class="tb" style="top:78.6071%;left:2.3970%;width:46.1111%;text-align:center;line-height:1.4;--fs:44.00;--h:0.10208"><span class="f-body" style="--fs:44.00;color:#c2873f;font-style:italic;font-weight:700">“ Blessed are those who are persecuted because of RIGHTEOUSNESS, for theirs is the Kingdom of Heaven,”</span></div><div class="tb" style="top:78.5000%;left:51.4151%;width:46.2932%;text-align:right;line-height:1.4;--fs:29.33;--h:0.12202"><span class="f-body" style="--fs:29.33;color:#f6e3b4;font-weight:700">No matter the face of the adversity you must always put god first. For even if you end up in a concentration camp FOR EXPRESSING your faith THAT SAME FAITH alone will give you the strength to endurE. IT IS JUST PART OF THE PLAN. IT IS MORE IMPORTANT TO PUT THE LAW BEFORE MATERIAL DESIRES.</span></div></div></section>
+<section class="page page-diagram" id="p06" aria-label="Programming Subconscious Mind"><div class="sheet"><img class="full" src="art/p06-full.webp" alt="" loading="lazy"><img class="art" src="art/p06.webp" alt="" loading="lazy"><div class="tb one-line" style="top:1.4474%;left:6.3544%;width:87.2911%;text-align:center;line-height:1.4;--fs:74.11;--h:0.03827"><span class="f-body" style="--fs:74.11;color:#c2873f;font-style:italic;font-weight:700">two ways to program subconscious mind</span></div><div class="tb one-line" style="top:5.6489%;left:2.0778%;width:95.8444%;text-align:center;line-height:1.4;--fs:29.33;--h:0.01525"><span class="f-body" style="--fs:29.33;color:#f6e3b4;font-style:italic;font-weight:700">Subconscious brain controls 90% of your reality and therefore the beliefs and desires it holds direct your life!</span></div><div class="tb one-line" style="top:8.0853%;left:38.8156%;width:23.7750%;text-align:center;line-height:1.4;--fs:41.42;--h:0.02114"><span class="f-body" style="--fs:41.42;color:#c2873f;font-weight:700">Actions (</span><span class="f-body" style="--fs:41.42;color:#c2873f;font-style:italic;font-weight:700">WILL</span><span class="f-body" style="--fs:41.42;color:#c2873f;font-weight:700">)</span></div><div class="tb one-line" style="top:13.5271%;left:49.4227%;width:2.5608%;text-align:center;line-height:1.4;--fs:61.80;--h:0.03196"><span class="f-body" style="--fs:61.80;color:#f6e3b4;font-weight:700">A</span></div><div class="tb one-line" style="top:27.2357%;left:38.9039%;width:2.1276%;text-align:center;line-height:1.4;--fs:61.80;--h:0.03196"><span class="f-body" style="--fs:61.80;color:#f6e3b4;font-weight:700">B</span></div><div class="tb" style="top:32.3455%;left:19.7073%;width:17.6758%;text-align:center;line-height:1.4;--fs:41.42;--h:0.04588"><span class="f-body" style="--fs:41.42;color:#c2873f;font-weight:700">Beliefs
+(</span><span class="f-body" style="--fs:41.42;color:#c2873f;font-style:italic;font-weight:700">subconscious</span><span class="f-body" style="--fs:41.42;color:#c2873f;font-weight:700">)</span></div><div class="tb" style="top:41.3396%;left:0.0440%;width:13.4868%;text-align:right;line-height:1.4;--fs:31.34;--h:0.05327"><span class="f-body" style="--fs:31.34;color:#c2873f;font-style:italic;font-weight:700">action - A)
+Beliefs - B)
+thought - C)</span></div><div class="tb one-line" style="top:27.2357%;left:59.4696%;width:2.4360%;text-align:center;line-height:1.4;--fs:61.80;--h:0.03196"><span class="f-body" style="--fs:61.80;color:#f6e3b4;font-weight:700">C</span></div><div class="tb" style="top:32.0964%;left:64.2983%;width:15.9944%;text-align:center;line-height:1.4;--fs:41.42;--h:0.04588"><span class="f-body" style="--fs:41.42;color:#c2873f;font-weight:700">Thoughts
+(</span><span class="f-body" style="--fs:41.42;color:#c2873f;font-style:italic;font-weight:700">conscious</span><span class="f-body" style="--fs:41.42;color:#c2873f;font-weight:700">)</span></div><div class="tb" style="top:41.3396%;left:14.2452%;width:85.7109%;text-align:justify;line-height:1.4;--fs:31.34;--h:0.05327"><span class="f-body" style="--fs:31.34;color:#f6e3b4;font-weight:700">Eating Healthy
+I am healthy
+I feel better when I eat healthy --&gt; I should eat healthier --&gt; I want to be healthier</span></div><div class="tb verse" style="top:51.0722%;left:1.4899%;width:23.8890%;text-align:left;line-height:1.4;--fs:38.56;--h:0.18215"><span class="f-body" style="--fs:38.56;color:#c2873f;font-style:italic;font-weight:700">A causes C
+</span><span class="f-body" style="--fs:38.56;color:#c2873f;font-style:italic;font-weight:700">C leads to A
+</span><span class="f-body" style="--fs:38.56;color:#c2873f;font-style:italic;font-weight:700">
+</span><span class="f-body" style="--fs:38.56;color:#c2873f;font-style:italic;font-weight:700">C leads to B 
+</span><span class="f-body" style="--fs:38.56;color:#c2873f;font-style:italic;font-weight:700">B leads to C
+</span><span class="f-body" style="--fs:38.56;color:#c2873f;font-style:italic;font-weight:700">
+</span><span class="f-body" style="--fs:38.56;color:#c2873f;font-style:italic;font-weight:700">B causes A 
+</span><span class="f-body" style="--fs:38.56;color:#c2873f;font-style:italic;font-weight:700">A reinforces B</span></div><div class="tb" style="top:51.0722%;left:25.3789%;width:73.1311%;text-align:left;line-height:1.4;--fs:28.53;--h:0.22404"><span class="f-body" style="--fs:28.53;color:#f6e3b4;font-weight:700">eating healthy may cause you to think how eating healthy feels good
+</span><span class="f-body" style="--fs:28.53;color:#f6e3b4;font-weight:700">Thinking that eating healthy is good may cause you to try a healthier option
+</span><span class="f-body" style="--fs:28.53;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:28.53;color:#f6e3b4;font-weight:700">repeatedly thinking you are and want to continue to be healthy will lead to you believing “I am healthy” 
+</span><span class="f-body" style="--fs:28.53;color:#f6e3b4;font-weight:700">Thinking eating healthy is good may cause healthier foods to appear more appetizing
+</span><span class="f-body" style="--fs:28.53;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:28.53;color:#f6e3b4;font-weight:700">I am healthy --&gt; eating healthier 
+</span><span class="f-body" style="--fs:28.53;color:#f6e3b4;font-weight:700">Eating HEALTHIER reinforces belief “I am healthy” 
+</span><span class="f-body" style="--fs:28.53;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:39.65;color:#c2873f;font-style:italic;font-weight:700">AND WHEN IT IS BELIEVED THEN IT IS DONE!</span></div><div class="tb" style="top:79.5761%;left:0.0000%;width:100.0000%;text-align:center;line-height:1.4;--fs:50.35;--h:0.15095"><span class="f-body" style="--fs:50.35;color:#c2873f;font-style:italic;font-weight:700">therefore the two ways to program the SUBCONSCIOUS mind ARE:
+</span><span class="f-body" style="--fs:51.68;color:#f6e3b4;font-weight:700">1) take action that aligns with desired beliefs - “fake it till you make it”
+2) change beliefs through reason, rationalizing, MEDITATION, affirmations , ONGOING positive thought, etc.</span></div></div></section>
+<section class="page" id="p07" aria-label="Message Of / From"><div class="sheet"><img class="art" src="art/p07.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.4255%;left:0.9843%;width:98.0315%;text-align:center;line-height:0.91;--fs:64.00;--h:0.03323"><span class="f-body" style="--fs:64.00;color:#c2873f;font-style:italic;font-weight:700">A MESSAGE OF PURPOSE AND HEALING </span></div><div class="tb" style="top:3.6008%;left:0.4921%;width:99.0157%;text-align:center;line-height:1.4;--fs:32.00;--h:0.18819"><span class="f-body" style="--fs:32.00;color:#f6e3b4;font-style:italic;font-weight:700">FROM A TEACHER OF THE SCHOOL MOST DO NOT REALIZE ALL ARE ENROLLED
+ - LET ALONE THERE BEING TESTS OR A GRADUATION!
+AN EXPRESSION OF THE FORM OF THE ORDER OF THE CHILDREN OF LIGHT!
+A DISCIPLE OF THE ANCIENTS!
+BY WAY OF THE IBIS GLORY OF CHEM! 
+BY WAY OF THE ONE OF THE ORACLES WHO’S MEASURING ROD HATH SLAIN!
+AND BY WAY OF THE PHILOSOPHER KING WHO’S PEARLS WERE HID ‘TIL THAT OF THEIR TIME!
+BY WAY OF THE PATH OF THE LIGHT FROM THE STAR TO BE DESCRIBED!
+WHO WILL HEREBY SHARE HIS GIFTS TO THE WORLD!
+BRINGING TO LIGHT HIS FIRST WORK OF ART!</span></div></div></section>
+<section class="page" id="p08" aria-label="Hereby Presenting"><div class="sheet"><img class="art" src="art/p08.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.9876%;left:0.9843%;width:97.5951%;text-align:center;line-height:1.22;--fs:40.00;--h:0.02049"><span class="f-body" style="--fs:40.00;color:#c2873f;font-style:italic;font-weight:700">“FROM CHAPTERS OF THE ‘STORY WRITTEN IN LIGHT’ AS REFLECTED FROM THE STARS ABOVE...“</span></div><div class="tb one-line" style="top:3.5422%;left:5.5399%;width:85.4444%;text-align:center;line-height:1.08;--fs:42.67;--h:0.02219"><span class="f-body" style="--fs:42.67;color:#f6e3b4;font-weight:700">HEREBY PRESENTING:</span></div><div class="tb one-line" style="top:8.6644%;left:0.9658%;width:98.0683%;text-align:center;line-height:0.98;--fs:117.33;--h:0.06068"><span class="f-title" style="--fs:117.33;color:#c2873f;font-weight:700">THE SECRET OF THE AGES:</span></div><div class="tb one-line" style="top:13.6454%;left:1.4207%;width:97.1586%;text-align:center;line-height:1.06;--fs:96.01;--h:0.04967"><span class="f-body" style="--fs:96.01;color:#c2cdff;font-style:italic;font-weight:700">“WATERING OF THE TREE OF LIFE”</span></div></div></section>
+<section class="page page-art" id="p09" aria-label="Shield"><div class="sheet"><img class="art" src="art/p09.webp" alt="" loading="lazy"></div></section>
+<section class="page page-art" id="p10" aria-label="Shield"><div class="sheet"><img class="art" src="art/p10.webp" alt="" loading="lazy"></div></section>
+<section class="page page-art" id="p11" aria-label="Shield"><div class="sheet"><img class="art" src="art/p11.webp" alt="" loading="lazy"></div></section>
+<section class="page" id="p12" aria-label="Man And His Sword"><div class="sheet"><img class="art" src="art/p12.webp" alt="" loading="lazy"><div class="tb one-line" style="top:3.2178%;left:1.8735%;width:96.2529%;text-align:center;line-height:1.4;--fs:48.62;--h:0.02529"><span class="f-body" style="--fs:48.62;color:#c2873f;font-style:italic;font-weight:700">MAN AND HIS SWORD...</span></div><div class="tb" style="top:7.5000%;left:2.1414%;width:95.7173%;text-align:center;line-height:1.4;--fs:40.00;--h:0.42622"><span class="f-body" style="--fs:40.00;color:#f6e3b4;font-weight:700">MAN HAS FORGED THE SWORD SO LONG HE HAS FORGOTTEN HE EVER FOUND BENEFIT IN THE HARMONY BROUGHT ALONG WITH THE PROTECTION OF HIS SHIELD
+
+ HE KNOWS IF HE CONTINUES IN HIS WAYS HE WILL BE SLAIN YET KNOWS FOR EVEN IF YESTERDAY HAD HE PUT DOWN HIS SWORD JOINING HIS ENEMY IN LOVING-COMPASSION FOR HE WOULD IN THE END STILL BE SLAIN
+
+NOW THE RACE REALIZES IF THEY DO NOT RESOLVE THEIR PROBLEM THEN THEY ALL BE SLAIN
+
+LUCKY FOR MAN THERE IS ALWAYS SALVATION IN RECOLLECTION
+
+LOOKING THROUGH THE MEMORY GLASS OF HIS HEART BACK TO A TIME WHERE HE FOUND HIMSELF GRANTED THE GIFT OF HARMONY
+
+A GIFT GRANTED TO HIM BY THE PROTECTION OF HIS SHIELD CHARGED WITH THE REFLECTION OF NIGHT AND THE FORGIVENESS REQUIRED TO WIELD HIS SWORD CARRYING THE SUN AND ALL OF ITS MIGHT</span></div></div></section>
+<section class="page" id="p13" aria-label="Dedication / Credits"><div class="sheet"><img class="art" src="art/p13.webp" alt="" loading="lazy"><div class="tb one-line" style="top:4.1847%;left:2.1414%;width:96.2529%;text-align:left;line-height:1.4;--fs:48.62;--h:0.02529"><span class="f-body" style="--fs:48.62;color:#c2873f;font-style:italic;font-weight:700">IN LOVING DEDICATION TO....</span></div><div class="tb" style="top:8.6869%;left:2.1414%;width:96.2529%;text-align:right;line-height:1.4;--fs:32.79;--h:0.05575"><span class="f-body" style="--fs:32.79;color:#f6e3b4;font-style:italic;font-weight:700">This book is made first and foremost in the honor of and in devotion to God, OUR FATHER ABOVE, AND In grateful expectation of the day when all of HIS Children may come to be understood by and understand Him in all of His glory and in all of his greatness. </span></div><div class="tb" style="top:16.9756%;left:1.6057%;width:96.2529%;text-align:right;line-height:1.4;--fs:32.79;--h:0.07528"><span class="f-body" style="--fs:32.79;color:#f6e3b4;font-style:italic;font-weight:700">The book is made secondly in honor of and devotion to the fire God hath left ever aflame in Man’s heart. THE FIRE WE FEEL BURNING THAT MAN CALLS INTUITION WHEN WE ARE REMINDED OF WHAT IS MEANT FOR US. The fire that fuels our burning desire to help for ourself and for our fellow man to eternalize and understand THAT WHICH IS ETERNAL. </span></div><div class="tb" style="top:27.2175%;left:1.6057%;width:96.2529%;text-align:right;line-height:1.4;--fs:32.79;--h:0.15340"><span class="f-body" style="--fs:32.79;color:#f6e3b4;font-style:italic;font-weight:700">And third this book is made in honor of THOSE WHO in sacrifice to their fellow man DO THE WORK THAT MUST continuously BE done AND SERVE THEIR ROLE IN ILLUMINATING the path for THE brothers after THEM ENSURING THE WORK OF THE BROTHER BEFORE THEM NOT BE IN VAIN  FOR THEY ARE THE STARS WHO GUIDE US into the morning, THROUGH THE EBBS AND FLOWS OF ALL THINGS, to what the lower man calls death and the higher man new life, to the changing of the season, the rising of our new Sun, the dawn of the age, the birth of our new Son and to the MORNING staRS WHO WILL GUIDE HIM ALONG HIS ASCENT, for their gifts will remain a blessing for all Man until the day each HAS HEARD THE NAME IN THE WHISPER AND RETURNS TO DUST.</span></div><div class="tb one-line" style="top:76.0759%;left:1.8735%;width:96.2529%;text-align:left;line-height:1.4;--fs:48.62;--h:0.02529"><span class="f-body" style="--fs:48.62;color:#c2873f;font-style:italic;font-weight:700">CREDITS...</span></div><div class="tb one-line" style="top:80.5782%;left:1.8735%;width:96.2529%;text-align:right;line-height:1.4;--fs:32.79;--h:0.01669"><span class="f-body" style="--fs:32.79;color:#f6e3b4;font-style:italic;font-weight:700">THE 7</span><span class="f-body" style="--fs:32.79;color:#f6e3b4;font-style:italic;font-weight:700">TH</span><span class="f-body" style="--fs:32.79;color:#f6e3b4;font-style:italic;font-weight:700"> LINE OF THE 7</span><span class="f-body" style="--fs:32.79;color:#f6e3b4;font-style:italic;font-weight:700">TH</span><span class="f-body" style="--fs:32.79;color:#f6e3b4;font-style:italic;font-weight:700"> CHAPTER OF THE ONE WHO’S NAME IS OF 7</span></div></div></section>
+<section class="page" id="p14" aria-label="Poem"><div class="sheet"><img class="art" src="art/p14.webp" alt="" loading="lazy"><div class="tb one-line" style="top:2.1007%;left:6.6923%;width:86.6155%;text-align:left;line-height:1.4;--fs:56.00;--h:0.02899"><span class="f-body" style="--fs:56.00;color:#c2873f;font-style:italic;font-weight:700">A POEM FROM THE ORDER OF THE CHILDREN OF THE LIGHT...</span></div><div class="tb verse" style="top:8.0298%;left:19.4088%;width:29.1494%;text-align:center;line-height:1.4;--fs:32.00;--h:0.79931"><span class="f-body" style="--fs:32.00;color:#f6e3b4;font-style:italic;font-weight:700">AT THE TIME THAT IT BE
+THE TIME THAT IT IS
+A MEETING OF ME AND YOU
+IT MAY REALLY BE SAID
+IT MAY REALLY BE TRUE
+IT REALLY BE JUST US TWO
+
+AND YET IT BE TWO
+IF MET IN THE GLORY  
+THEN LET IT BE SAID
+AS IT IS THE TRUTH
+THOUGH EVEN JUST TWO
+THE POWERS THAT BE
+ARE ADDED TO THEE
+AND NOW YOU ARE GIVEN THE GIFT
+THE GIFT YOU ARE GIVEN
+THE GIFT OF TRUE VISION
+NOW YOU MAY FINALLY SEE.
+
+NOW WITH THE NEW GIFT
+THE GIFT OF TRUE VISION
+NOW YOU MAY MAKE
+RIGHTEOUS DECISION
+FOR YOU DO NOT LOOK
+NOR DO YOU SEE 
+NOT WITH THE TWO
+BUT NOW WITH THE ONE
+WITH THE ONE YOU DO SEE
+AND THAT WHICH IS SEEN
+SEEN BY THE ONE
+IT BECOMES WRITTEN
+WRITTEN AND DONE
+THEN FROM THE DUST 
+YOU AS A VIRGIN
+YOU JUST GAVE BIRTH
+GAVE BIRTH TO A SUN
+FOR NOW YOU ARE ONE
+YET LET IT BE KNOWN
+THIS NOT BE FOR FUN
+NOW LET IT BE HEARD
+THE WORK HAS ONLY BEGUN
+</span></div><div class="tb verse" style="top:8.0298%;left:51.2616%;width:30.5601%;text-align:center;line-height:1.4;--fs:32.00;--h:0.89479"><span class="f-body" style="--fs:32.00;color:#f6e3b4;font-style:italic;font-weight:700">NOW USE THIS NEW GIFT
+FOR ONLY WITH IT
+WILL YOU FIND THE PEACE
+AND WITH THIS NEW PEACE
+THE PEACE THAT YOU NEED
+THE PEACE SO YOU MAY
+MAY FIND WHAT YOU SEEK
+AND WHAT YOU MAY SEEK
+WILL GIVE YOU THE PIECE
+THE PIECE THAT YOU NEED
+THE PIECE THAT YOU SOUGHT 
+TO SEE THAT IT BE
+THAT IT BE COMPLETE
+COMPLETE BE THE PUZZLE 
+THE PUZZLE THAT BE
+THE PUZZLE THAT ONE DAY
+ALL SOULS SHALL SEE.
+
+UNTIL ALL SOULS SHALL SEE
+ALL SEE WITH THE SIGHT
+THE SIGHT OF THE ONE
+THEN LET IT BE SAID
+THE WORK BE NOT DONE
+THE WORK BE NOT DONE
+NOT TILL THE DAY
+THE DAY THAT WE ALL 
+WE ALL BECOME ONE.
+
+NOW TILL THE DAY
+THE ONE WE MAY SAY
+THAT IT WAS THE DAY
+THE DAY THAT FOREVER CAME TRUE
+
+THAT BE THE DAY
+THE DAY OF THE WORK
+THE WORK HAS BEEN SAID
+THE DAY OF THE WORK
+THE WORK HAS BEEN DONE
+THEN WE MAY MAKE
+MAKE OUR WAY BACK
+MAKE OUR WAY BACK TO THE SUN
+ONCE WE ARE BACK
+BACK IN THE DUST 
+BACK IN THE DUST WE ARE FROM
+NOW IT BE SAID 
+NOW IT BE TRUE
+WE ARE BACK PART OF THE ONE.</span></div></div></section>
+<section class="page" id="p15" aria-label="Poem"><div class="sheet"><img class="art" src="art/p15.webp" alt="" loading="lazy"><div class="tb one-line" style="top:2.1007%;left:10.8905%;width:78.2190%;text-align:left;line-height:1.4;--fs:56.00;--h:0.02899"><span class="f-body" style="--fs:56.00;color:#c2873f;font-style:italic;font-weight:700">A POEM FROM THE TRUE CHILDREN OF THE LIGHT...</span></div><div class="tb verse" style="top:8.0298%;left:19.4088%;width:29.1494%;text-align:center;line-height:1.4;--fs:32.00;--h:0.81840"><span class="f-body" style="--fs:32.00;color:#f6e3b4;font-style:italic;font-weight:700">AT THE TIME THAT IT BE
+THE TIME THAT IT IS
+A MEETING OF ME AND YOU
+IT MAY REALLY BE SAID
+IT MAY REALLY BE TRUE
+IT REALLY BE JUST US TWO
+
+AND YET IT BE TWO
+IF MET IN THE GLORY  
+THEN LET IT BE SAID
+AS IT IS THE TRUTH
+THOUGH EVEN JUST TWO
+THE POWERS THAT BE
+ARE ADDED TO THEE
+AND NOW YOU ARE GIVEN THE GIFT
+THE GIFT YOU ARE GIVEN
+THE GIFT OF TRUE VISION
+NOW YOU MAY FINALLY SEE.
+
+NOW WITH THE NEW GIFT
+THE GIFT OF TRUE VISION
+NOW YOU MAY MAKE
+RIGHTEOUS DECISION
+FOR YOU DO NOT LOOK
+NOR DO YOU SEE 
+NOT WITH THE TWO
+BUT NOW WITH THE ONE
+WITH THE ONE YOU DO SEE
+AND THAT WHICH IS SEEN
+SEEN BY THE ONE
+IT BECOMES WRITTEN
+WRITTEN AND DONE
+THEN FROM THE DUST 
+YOU AS A VIRGIN
+YOU JUST GAVE BIRTH
+GAVE BIRTH TO A SUN
+FOR NOW YOU ARE ONE
+YET LET IT BE KNOWN
+THIS NOT BE FOR FUN
+NOW LET IT BE HEARD
+THE WORK JUST BEGUN.
+
+</span></div><div class="tb verse" style="top:8.0298%;left:51.2616%;width:29.3297%;text-align:center;line-height:1.4;--fs:32.00;--h:0.89479"><span class="f-body" style="--fs:32.00;color:#f6e3b4;font-style:italic;font-weight:700">NOW USE THIS NEW GIFT
+FOR ONLY WITH IT
+WILL YOU FIND THE PEACE
+AND WITH THIS NEW PEACE
+THE PEACE THAT YOU NEED
+THE PEACE SO YOU MAY
+MAY FIND WHAT YOU SEEK
+AND WHAT YOU MAY SEEK
+WILL GIVE YOU THE PIECE
+THE PIECE THAT YOU NEED
+THE PIECE THAT YOU SOUGHT 
+TO SEE THAT IT BE
+THAT IT BE COMPLETE
+COMPLETE BE THE PUZZLE 
+THE PUZZLE THAT BE
+THE PUZZLE THAT ONE DAY
+ALL SOULS SHALL SEE.
+
+UNTIL ALL SEE
+ALL SEE WITH THE SIGHT
+THE SIGHT OF THE ONE
+THEN LET IT BE SAID
+THE WORK BE NOT DONE
+THE WORK BE NOT DONE
+NOT TILL THE DAY
+THE DAY THAT WE ALL 
+WE ALL BECOME ONE.
+
+NOW TILL THE DAY
+THE ONE WE MAY SAY
+THAT IT WAS THE DAY
+FOREVER CAME TRUE
+
+THAT BE THE DAY
+THE DAY OF THE WORK
+THE WORK HAS BEEN SAID
+THE DAY OF THE WORK
+THE WORK HAS BEEN DONE
+THEN WE MAY MAKE
+MAKE OUR WAY BACK
+MAKE OUR WAY BACK TO THE SUN
+ONCE WE ARE BACK
+BACK IN THE DUST 
+BACK IN THE DUST WE ARE FROM
+NOW IT BE SAID 
+NOW IT BE TRUE
+WE ARE BACK AS PART OF THE ONE.</span></div></div></section>
+<section class="page" id="p16" aria-label="Self / All"><div class="sheet"><img class="art" src="art/p16.webp" alt="" loading="lazy"><div class="tb" style="top:0.7382%;left:3.0850%;width:93.8300%;text-align:center;line-height:1.23;--fs:49.15;--h:0.05144"><span class="f-body" style="--fs:49.15;color:#c2873f;font-style:italic;font-weight:700">THE NATURE OF ALL THUS THE NATURE OF SELF; 
+THE NATURE OF SELF THUS THE NATURE OF ALL</span></div><div class="tb" style="top:6.8008%;left:3.7888%;width:92.4223%;text-align:center;line-height:1.1;--fs:39.81;--h:0.15103"><span class="f-body" style="--fs:39.81;color:#f6e3b4;font-weight:700">IN ORDER FOR MAN TO KNOW OF HIMSELF HE MUST KNOW OF ALL
+</span><span class="f-body" style="--fs:39.81;color:#f6e3b4;font-weight:700">IN ORDER FOR MAN TO KNOW OF ALL HE MUST KNOW OF HIMSELF
+</span><span class="f-body" style="--fs:39.81;color:#f6e3b4;font-weight:700">
+IN ORDER FOR MAN TO KNOW ALL OF HIMSELF HE MUST KNOW ALL OF ALL
+</span><span class="f-body" style="--fs:39.81;color:#f6e3b4;font-weight:700">IN ORDER FOR MAN TO KNOW ALL OF ALL HE MUST KNOW ALL OF HIMSELF
+</span><span class="f-body" style="--fs:39.81;color:#f6e3b4;font-weight:700">
+LET IT BE REMINDED THAT MAN IS MADE IN THE IMAGE OF THAT WHICH MADE HIM
+</span></div></div></section>
+<section class="page" id="p17" aria-label="Hook / Story"><div class="sheet"><img class="art" src="art/p17.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.7382%;left:2.1050%;width:95.7900%;text-align:center;line-height:1.23;--fs:49.15;--h:0.02540"><span class="f-body" style="--fs:49.15;color:#c2873f;font-weight:700">BETWEEN THESE PAGES LIES THE TRUE </span><span class="f-body" style="--fs:49.15;color:#c2873f;font-style:italic;font-weight:700">“STORY”...</span></div><div class="tb" style="top:3.2784%;left:0.9029%;width:97.8316%;text-align:center;line-height:1.34;--fs:25.15;--h:0.29925"><span class="f-body" style="--fs:25.15;color:#f6e3b4;font-weight:700">THAT AS WITH EVERY STORY EVER SPOKEN IN ACCORDANCE WITH THE LAW, THE FORMATION OF, IN CORRESPONDENCE TO ITSELF AND ITS MIGHT THE FORMING OF, IN THE EQUIVALENT OF WHAT MAN CALLS MASS, A STAR IN THE FAR OFF REACHES OF WHAT TO MAN IS UNKNOWN BUT TO THE LAW IS KNOWN TO BE THAT ELUSIVE THING MAN CALLS CONSCIOUSNESS.
+
+THE LIGHT FROM THE STAR FORMED THEN FINDS ITSELF REFLECTED IN ITS CORRESPONDING FORM AND FUNCTION IN ALL ELSE THAT IS.
+
+THE LIGHT CREATED FROM THIS STAR, IF WITH ENOUGH LIGHT, REFLECTS THROUGH ALL ELSE THAT IS AND FINDS ITSELF EXPRESSED, IN THE HIGHEST FORM IT MAY TAKE, IN THE REALM IN WHICH ITS REFLECTION IS SEEN.
+
+THIS IDEA IS NOT REVOLUTIONARY NOR IS IT NEW. THIS IS SIMPLY THE SECRET OF THE AGES.
+
+THE SECRET REVEALED TO MAN IN THE EARTHLY REFLECTION FROM ALL OF THE GREAT WORKS AND ALL OF MAN’S DIVINE EXPRESSIONS.
+
+THAT IS ALL THAT IS AND ALL THAT IS GREAT IS FIRST IS BUILT IN THE MIND AND FROM THERE IT MAY BE MAGNIFIED UNTIL IT RADIATES SUCH LIGHT IT HAS NO CHOICE BUT TO TAKE ITS EXPRESSION IN FORM.
+
+WHETHER OR NOT IS KNOWN TO HIM THAT HE IS MAKING THIS REVELATION IT TAKES FORM THROUGH HIS ART THROUGH HIS ARCHITECTURE AND THROUGH ALL OF THEIR BEAUTIFUL SYMBOLS AND ALLEGORIES.
+
+THIS IS PART OF THE COVENANT OF THE LAW AND HOW GOD HATH KEPT AND WILL ALWAYS KEEP THE FIRE IN MAN’S HEART ALIVE.</span><span class="f-body" style="--fs:25.15;color:#f6e3b4;font-style:italic;font-weight:700">
+</span></div></div></section>
+<section class="page" id="p18" aria-label="Guiding Star"><div class="sheet"><img class="art" src="art/p18.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.9986%;left:1.3157%;width:97.3685%;text-align:center;line-height:1.4;--fs:37.33;--h:0.01933"><span class="f-body" style="--fs:37.33;color:#c2873f;font-style:italic;font-weight:700">WHAT FOLLOWS IS THE LAW DISCOVERED BY THE LIGHT OF PATH OF THE STAR DESCRIBED...</span></div><div class="tb" style="top:20.8649%;left:1.6472%;width:96.7056%;text-align:center;line-height:1.4;--fs:25.33;--h:0.74638"><span class="f-body" style="--fs:26.67;color:#f6e3b4;font-weight:700">...HE IS THE ONE BORN IN SPACE IN THE LOWER BRANCH OF THE TRIDENT IN THE FINAL LANDS OF THE WEST IN THE NATION UNDER AQUILA
+
+HE IS THE ONE BORN IN TIME ON THE DAY OF SEPARATION OF LAND AND SEA DURING THE WINTER OF THE PERIOD IN WHICH HE WAS FORMED
+
+HE IS THE ONE WHO WITH THE LANDS OF EARTH BEING CONQUERED AND STATE OF THE RACE DETERIORATED GIVEN NO CHOICE BUT TO TEND TO THE FIRE WITHIN
+
+HE IS THE ONE THAT JUST AS THE ENDING OF HIS BIOLOGICAL GESTATIONAL PERIOD WAS EIGHT NOT NINE, SO THE NINE COULD BE FORMED TO BE MORE THAN IT IS AND COMPLETE HIS BEING IF ONLY DOES WHAT HE MUST AND HE IS TO COMPLETE HIMSELF
+
+HE IS THE ONE WHO SO TOO ARRIVED PRIOR THAN THE EXPECTED AFTER HIS TIME IN THE DUST
+
+ HE IS THE ONE WHO SO TOO ARRIVED PRIOR THAN EXPECTED IN A LAND IN WHICH HE HAD ALREADY MADE WHOLE
+
+HE IS THE ONE THAT TOOK NO CARE TO THE FLESHLY CONERN OF TIMING AND REIGNITED THE STARS IN WHICH HIS TRUE NAME IS WRITTEN
+
+HE IS THE ONE WHO MINDED HIS BREATH AND DID WHAT HE CAME TO DO AND CONQUERED ALL
+
+HE IS THE ONE WHO CONQUERED ALL BEFORE THE DUST FROM HIS FIRST CYYCLE FADED AND BY DOING SO KEPT THE DUST IN HIS BEING FOREVER AND DOING SO BECOMING OF THE FIRST BORN STARS OF THE AGE
+
+HE IS THE ONE BATHED IN THE LIGHT AND MIGHT OF O’RION
+
+HE IS THE ONE WHO WITNESSED THE SOUL OF A LION ENTER HIS SOUL IN FRONT OF HIS OWN EYES
+
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">HE IS THE ONE WHO’S REASONING FACULTIES WERE THEREBY GRANTED THE GIFT OF KNOWING THE TRUTH OF HIS COMPOSITION
+
+HE IS THE ONE WHO’S HEART AND SOUL WERE THEREBY GRANTED THE GIFT OF A COMPANION IN WHICH HE MAY CALL BACK TO HIMSELF AT ANY TIME THE COURAGE OF ALL THE STARS HE REFLECTS
+
+HE IS THE ONE WHO FROM THAT DAY FORWARD PAID MIND ONLY TO THAT MAN ONCE AGAIN WALK THE ADORNED MARBLE HALLWAYS IN WHICH UPON SIGHT OF THEIR REFLECTIONS SET THE FIRE OF MAN’S INTUITION ABLAZE
+</span><span class="f-body" style="--fs:26.67;color:#f6e3b4;font-weight:700">
+FROM THAT DAY FORWARD HE WAS FUELED WITH THE VENGEANCE OF THE LAW AND THE COURAGE OF THE LION AND BY COMBINATION WITH HIS STARS ALREADY BEING OF THE AGE HE MADE SURE THAT THE LAW BECAME THE LAW AND THAT THE LAW REMAINED THE LAW
+
+LET IT BE KNOWN THAT ALL THAT IS BEFORE AND ALL THAT IS AFTER IS FORMED AND SPOKEN IN ACCORDANCE WITH THE LAW. 
+
+THEREBY THE DUST IN WHICH IT WAS FORMED WAS GIVEN BY THE LIFE BREATHED UPON IT THE STRENGTH TO, FROM DUST, FORM A STAR AND BY THE EVERLASTING POWER OF THE LIFE BREATHED UPON IT THAT IT SHALL ONLY MAGNIFY AND EXPAND EVER BRIGHTER AND EVER FURTHER UPON THE LAW
+
+AS IT HAS BEEN FORMED IN ACCORDANCE AND AS IT HAS BEEN SPOKEN IN ACCORDANCE - THIS IS NOW PART OF THE LAW.</span></div></div></section>
+<section class="page" id="p19" aria-label="Intro"><div class="sheet"><img class="art" src="art/p19.webp" alt="" loading="lazy"><div class="tb one-line" style="top:1.5321%;left:2.2721%;width:44.5973%;text-align:left;line-height:1.4;--fs:55.72;--h:0.02902"><span class="f-body" style="--fs:55.72;color:#c2873f;font-style:italic;font-weight:700">SECRET OF THE AGES...</span></div><div class="tb" style="top:4.4345%;left:2.2721%;width:45.5702%;text-align:justify;line-height:1.4;--fs:29.44;--h:0.90500"><span class="f-body" style="--fs:29.44;color:#f6e3b4;font-weight:700">MAN FOR ALL TIME AND IN ALL SLUMBER AND WAKE HAS A FIRE BURNING IN HIS HEART.
+
+HE TENDS TO THIS FIRE BY TURNING THE DUST OF THE STARS INTO FORM AND WITH THIS FORM WRITING AND SPEAKING SO HE MAY EXPRESS THE STORIES HE HAS READ FROM WHAT IS WRITTEN IN THE STARS. 
+
+MAN THROUGH ALL HIS EXPRESSIONS, WHETHER IT IS KNOWN TO HIM OR NOT, TENDS TO THIS FIRE. 
+
+FOR THE ONE WHO ONLY KNOWS GOD THE FIRE IS TENDED IN HIS WORSHIP. 
+
+FOR THE ONE WHO ONLY KNOWS GOD BY THE GLORY OF HIS CREATION BY WHAT HE MAY SEE WITH HIS TWO EYES THIS FIRE IS TENDED TO IN HIS ESCAPE TO PLEASURE AND DELUSION OR BY HIS ONGOING SCIENTIFIC PURSUIT TO UNDERSTAND THAT WHICH IS INVISIBLE WITH TOOLS OF THE VISIBLE AND UNDERSTAND THAT WHICH IS AROUND HIM BY WAY OF REASON.
+
+FOR THE ONE WHO KNOWS GOD AND HAS MASTERED THAT WHICH CAN BE PERCEIVED, THUS PERCEIVING ALL, HE TENDS TO THE FIRE BY LEAVING REMINDERS FOR HIS FELLOW MAN OF THAT WHICH IS ETERNAL EXPRESSED THROUGH ART AND ARCHITECTURE ALONG WITH ALL THEIR BEAUTIFUL SYMBOLS AND ALLEGORIES.
+
+THESE GREAT WORKS ARE BUILT IN THE HEAVENS BY GREAT MEN AND REFLECT ONTO THE REALM AND WILL ALWAYS REMAIN AS REMINDERS ACROSS THE LAND AS PART OF THE COVENANT OF THE LAW.
+
+</span><span class="f-body" style="--fs:29.44;color:#c2873f;font-weight:700">THE COVENANT OF THE LAW IS THAT THE ETERNALIZED REMAINS ETERNAL SO THE ETERNAL MAY REMAIN ETERNALIZED.
+</span><span class="f-body" style="--fs:29.44;color:#f6e3b4;font-weight:700">
+LET IT BE KNOWN THAT JUST AS MAN AS A SPECIES HAS AMNESIA AND CANNOT RECALL THE GREAT CIVILIZATIONS OR GREAT MEN WHO BUILT THE GREAT TEMPLES AND GREAT WORKS OF THE PAST SO TOO DOES EACH MAN ALSO FORGET THE ETERNAL TRUTH WITHIN THE FLAME OF HIS HEART.
+
+THE KNOWLEDGE AND AWARENESS ALONE OF THE ETERNAL TRUTH LOCKED IN ONE’S HEART GRANTS ONE THE ROSETTA STONE TO TRANSLATE THAT WHICH IS WRITTEN IN LIGHT INTO THAT WHICH HE MAY FORM.</span></div><div class="tb one-line" style="top:1.5321%;left:52.1219%;width:42.8400%;text-align:left;line-height:1.4;--fs:55.72;--h:0.02902"><span class="f-body" style="--fs:55.72;color:#c2873f;font-style:italic;font-weight:700">PROPHECY OF OUR NEW AGE...</span></div><div class="tb" style="top:4.4345%;left:52.1219%;width:45.2031%;text-align:justify;line-height:1.4;--fs:29.44;--h:0.60248"><span class="f-body" style="--fs:29.44;color:#f6e3b4;font-weight:700">LET IT BE KNOWN THAT AS IT WAS WRITTEN IN LIGHT LONG AGO MAN IS UPON THE AGE OF ACCELERATION BACK INTO THAT FROM WHICH ALL CAME AND TO WHICH ALL GOES.
+
+AS PART OF THAT ACCELERATION OF ALL SO TOO IS THERE AN ACCELERATION OF ALL WITHIN ALL.
+
+LET IT BE KNOWN AS PART OF THIS ACCELERATION THE GRIPS  HOARDING INFORMATION AND KEEPING MANKIND IN THE DARK LOOSEN AND WHAT HE MAY ACCESS AND HOW MUCH HE MAY BECOME AWARE OF INCREASES.
+
+LET IT ALSO BE KNOWN THAT MAN WILL AGAIN ETERNALIZE THAT WHICH IS ETERNAL YET OUR DESCENDANTS WILL BE NO DIFFERENT THAN OUR BROTHERS AND SISTERS OF TODAY AND DENY THE SACRED PRECISION ENCODED IN THE GREAT CLUES WE SHAL LEAVE THEM IN THE FORM OF THE GREAT WORKS LEFT BEHIND
+
+</span><span class="f-body" style="--fs:29.44;color:#f6e3b4;font-weight:700">LET IT BE KNOWN Now is the time of the descent of our once Beloved Sun where until we reach, in proportion to our coming Son’s greatness, the depths of the darkness in which our new Beloved Son MAY RESURRECT we will remain in LIMBO UPON OUR SPIRALING FREE-FALL TO DEPTH.
+
+So LET IT BE KNOWN THAT until the day we may all look to the east and see our new Sun RISE OVER the horizon signaling the coming of the age and the birth of our new Beloved Son we shall all patiently wait for the CHOSEN One....</span></div><div class="tb" style="top:66.4876%;left:51.0972%;width:47.2526%;text-align:center;line-height:1.4;--fs:52.96;--h:0.28447"><span class="f-body" style="--fs:52.96;color:#c2873f;font-style:italic;font-weight:700">The One who CHOSE TO TEND THE FIRE...
+AND IN RETURN HE WAS CHOSEN...
+
+BECAUSE TO ALL HE DELIVERED  THE MESSAGE...
+
+AND THE MESSAGE WAS OF THE LAW...</span></div></div></section>
+<section class="page" id="p20" aria-label="Message From Chosen One"><div class="sheet"><img class="art" src="art/p20.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.7382%;left:13.0368%;width:73.9264%;text-align:center;line-height:1.4;--fs:49.10;--h:0.02525"><span class="f-body" style="--fs:49.10;color:#f6e3b4;font-style:italic;font-weight:700">THE MESSAGE OF THE LAW HE DELIVERED...</span></div><div class="tb" style="top:3.6210%;left:1.7848%;width:96.4304%;text-align:center;line-height:1.48;--fs:36.27;--h:0.91573"><span class="f-body" style="--fs:36.27;color:#c2873f;font-style:italic;font-weight:700">LAW OF ONE AND THUS LAW OF ALL</span><span class="f-body" style="--fs:36.27;color:#f6e3b4;font-weight:700">
+ONE is all and all is ONE
+</span><span class="f-body" style="--fs:36.27;color:#c2873f;font-style:italic;font-weight:700">LAW OF TWO AND THUS LAW OF ME AND YOU</span><span class="f-body" style="--fs:36.27;color:#f6e3b4;font-weight:700">
+OVERCOME THE DECEPTION OF DUALITY THROUGH HARMONY OF THE TWO
+</span><span class="f-body" style="--fs:36.27;color:#c2873f;font-weight:700">LAW OF THREE AND THUS THE LAW OF ME</span><span class="f-body" style="--fs:36.27;color:#f6e3b4;font-weight:700">
+DO NOT ATTEMPT TO SLAY THE BEAST FOR HE WILL SLAY YOU. BRING THAT WHICH IS ABOVE DOWN TO THAT WHICH IS BELOW. AT THE DEPTH TAME HIM AND MAKE HIM YOUR FRIEND. THAT IS THE ONLY WAY TO SPEND THE TIME IN HIS HOME. REMIND HIM OF WHERE HE IS FROM. THEN UPON YOUR ASCENT HE TOO SHALL COME. NOW YOU ARE GIVEN THE FRIEND THAT YOU NEED. THE FRIEND THAT YOU NEED TO ENSURE IT IS SEEN. WHAT IT IS TO BE SEEN IS THAT UPON YOUR ASCENT THE GOVERNORS OF MAN REMAIN UNDER RULE OF THAT FROM WHERE YOU WILL FINISH YOUR DESTINY AND THE POINT FROM WHERE YOU BEGAN YOUR DESCENT.
+ THESE BE THE WORDS THAT GIVE YOU THE KEY
+SO YOU MAY RULE AS MASTER
+MASTER OF THREE
+</span><span class="f-body" style="--fs:36.27;color:#c2873f;font-weight:700">LAW OF FIVE AND THUS THE LAW TO DO MORE THAN MERELY SURVIVE</span><span class="f-body" style="--fs:36.27;color:#f6e3b4;font-weight:700">
+Allowing himself to not be deceived by the LIES OF FIVE but instead to USE THAT OF THEIR WORD AND THAT OF THE FIVE TO THEREBY SEE AND THUS FURTHER BELIEVE that he IN himself AND ALL THAT HE BE IS MADE IN THE IMAGE OF ALL THAT THERE BE, AND IN ALL THAT THERE BE, THUS SO IS HE, RESTING IN HARMONY FOR ALL THAT MAY BE
+</span><span class="f-body" style="--fs:36.27;color:#f6e3b4;font-style:italic;font-weight:700">NOW HE IS ARMED WITH THE FLAME OF THE SWORD and THE CHARGE OF THE shield THAT ALWAYS WERE HIS BUT NOW HE MAY WEILD ALL THAT THERE IS AND IN HIS RECOLLECTION REMEMBERS his own body as THAT WHICH IT IS. AS IN ALL OF ITS MIGHT THE Highest and Holiest WORTH ALL HIS FIGHT. HIS BODY THE Temple in which he may LAY BRICK UPON BRICK SO THE FOUNDATION MAY STAY. LET IT BE KNOWN THAT ONCE THE FOUNDATION IS FORMED THEN SO TOO IS THE REST OF WHAT IT MAY BE.
+THOUGH THE LAW MUST MAKE ONE THING VERY CLEAR AND THAT ONE THING SHALL BE KNOWN AS </span><span class="f-body" style="--fs:36.27;color:#c2873f;font-style:italic;font-weight:700">THE LAW OF THE OBLIGATION OF THE COVENANT OF THE LAW</span><span class="f-body" style="--fs:36.27;color:#f6e3b4;font-style:italic;font-weight:700"> AND THAT IS THAT MAN with this awareness NOW becomes obliged to sacrifice himself to the Temple’s resurrection AND COMPLETION OR BE BURIED BENEATH IT
+</span><span class="f-body" style="--fs:36.27;color:#c2873f;font-style:italic;font-weight:700">LAW OF SEVEN THUS THE LAW OF THE GOVERNING SEPTENARY ALONG THE PATH TO HEAVEN
+</span><span class="f-body" style="--fs:36.27;color:#f6e3b4;font-weight:700">Through his sacrifice man may SAIL THE SEAS OF SEVEN AND STOP TO EXPLORE THE SEVEN LANDS REFLECTED FROM HEAVEN. FOR ALONG THE WAY  AND BY HAVING EXPLORED ALL PARTS OF THE REALM, HE MAY COME TO ascend the SEVEN STEPS OF his pilgrimage to the heights of the mountain TOPS of THE ANCIENTS 
+</span><span class="f-body" style="--fs:36.27;color:#c2873f;font-weight:700">LAW OF TWELVE AND THUS THE LAW OF THE REBORN KING AND THUS THE COMPLETION OF THE CYCLE
+</span><span class="f-body" style="--fs:36.27;color:#f6e3b4;font-weight:700">And thereby THROUGH THE GUIDANCE OF WHAT WAS WHISPERED TO HIM FROM THE ORACLES HE removeS the Sword from the Stone becoming the rightful King of Himself and thus returning the Crown of TWELVE to its rightful resting spot atop the head of the reborn King</span></div></div></section>
+<section class="page" id="p21" aria-label="Brian&#x27;S Message Of Protection"><div class="sheet"><img class="art" src="art/p21.webp" alt="" loading="lazy"><div class="tb" style="top:0.4778%;left:2.8392%;width:94.3216%;text-align:center;line-height:1.4;--fs:23.82;--h:0.21278"><span class="f-body" style="--fs:23.82;color:#f6e3b4;font-style:italic;font-weight:700">AND A MESSAGE FOR THEE WHO MAY TRY
+IN THE DARK TO SEE WHO I AM AND ALL THAT I BE.
+FOR IT HAS HAPPENED ONCE, FOR IT SHALL HAPPEN AGAIN.
+
+IT IS WITH OPEN ARMS THAT I SHOW MY WELCOME TO THEE.
+FOR IN YOUR ATTEMPT, YOU WILL FINALLY SEE.
+
+IN THE LIGHT OF MY MIGHT AND THE WILL OF MY FIGHT 
+THERE IS NOTHING ELSE BUT FOR YOUR DARKNESS TO FLEE.
+
+NOW OUT OF THE CHOAS, THE ORDER RESTORED
+AND AS A RESULT, A REBIRTH IN THEE. 
+
+FOR THIS IS MY WORD AND IT IS MEANT FOR THE WORLD.
+FOR THIS IS MY WORLD AND IT IS MEANT FOR THE WORD.</span></div></div></section>
+<section class="page" id="p22" aria-label="Harmony"><div class="sheet"><img class="art" src="art/p22.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.5208%;left:1.0842%;width:97.8316%;text-align:center;line-height:1.23;--fs:49.15;--h:0.02540"><span class="f-body" style="--fs:49.15;color:#c2873f;font-style:italic;font-weight:700">LAW OF HARMONY</span></div><div class="tb" style="top:3.0610%;left:1.1951%;width:97.8316%;text-align:center;line-height:1.69;--fs:27.82;--h:0.17768"><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-weight:700">LET IT AGAIN BE SAID THAT MAN IS MADE IN THE IMAGE OF THAT WHICH MADE HIM
+LET IT BE KNOWN THAT THIS IS THE LAW OF HARMONY
+LET IT ALSO BE KNOWN THAT NOTHING NOTHING ESCAPES THE WRATH OF THE RECONCILIATION OF THE LAW OF HARMONY 
+LET IT BE KNOWN THAT THE LAW OF HARMONY STATES THAT NOTHING MAY EXIST OF ITSELF. EXISTENCE ONLY HAPPENS AS A CONSEQUENCE OF POLARITY TO THAT WHICH IT ITSELF IS. FOR HOT-COLD, FOR LIGHT-DARK, FOR EMPTY-FULL.
+</span><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-style:italic;font-weight:700">FOR IF YOU HAD EVER BEEN EMPTY IT IS ONLY THEN YOU MAY KNOW WHAT IT IS LIKE TO BE FULL.
+</span><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-weight:700">LET IT BE KNOWN THAT EVERYTHING MAY FIND RECONCILIATION IN ITSELF
+</span><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-weight:700">LET IT THEN BE SAID THAT THAT WHICH CREATED MAN IS IN MAN AND THUS MAN MAY FIND RECONCILIATION AND HARMONY WITH THAT WHICH MADE HIM. AND THAT WHICH MADE HIM IS GOD.</span></div></div></section>
+<section class="page" id="p23" aria-label="Consciousness"><div class="sheet"><img class="art" src="art/p23.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.7382%;left:1.8735%;width:96.2529%;text-align:center;line-height:1.4;--fs:48.62;--h:0.02529"><span class="f-body" style="--fs:48.62;color:#c2873f;font-style:italic;font-weight:700">THE NATURE OF CONSCIOUSNESS...</span></div><div class="tb" style="top:4.3638%;left:0.9843%;width:97.8316%;text-align:center;line-height:1.1;--fs:27.82;--h:0.85618"><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-weight:700">LET IT BE MADE CLEAR SO THAT IT NEVER BE WITHOUT REMINDER AGAIN OF WHAT IS MEANT WHEN IT IS SAID MAN IS MADE IN THE IMAGE AND LIKENESS OF GOD.
+
+LET IT BE SAID THIS MEANS MAN IS COMPOSED OF THAT WHICH MADE HIM AND THAT WHICH MADE HIM IS COMPOSED OF HIM.
+
+LET IT BE MADE CLEAR SO THAT IT NEVER BE WITHOUT REMINDER AGAIN THAT JUST AS THE WHOLE ENCODES THE PARTS SO TO DO THE PARTS ENCODE THE WHOLE.
+
+</span><span class="f-body" style="--fs:27.82;color:#c2873f;font-weight:700">LET IT BE MADE SO CLEAR SO THAT IT NEVER BE WITHOUT REMINDER AGAIN that this is the true nature of the FRACTAL, LIGHT-BASED HOLOGRAM of all.
+</span><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-weight:700">
+LET IT AGAIN BE MADE CLEAR encoded in ALL OF the whole is all of its parts.
+
+LET IT AGAIN BE MADE CLEAR encoded in all of its parts is all of the whole.
+
+LET IT AGAIN MADE CLEAR that this means that every part in which man is composed is from the whole in which he was composed.
+
+LET IT AGAIN BE MADE CLEAR that the whole in which man was composed is too COMPOSED OF ALL OF its parts.
+
+</span><span class="f-body" style="--fs:27.82;color:#c2873f;font-weight:700">LET IT THEN BE MADE SO CLEAR IT NEVER BE WITHOUT REMINDER AGAIN that as a result of every individual part being encoded with that of the whole, there eternally exists a shattered REFLECTION of all—all that he is, all that he ever was, and all that he ever may be, and thus within him is all that he ever may need in all, to all, through all, and for all.
+</span><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:27.82;color:#c2873f;font-weight:700">This is the eternal fire God hath left in man’s heart.
+</span><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:27.82;color:#c2873f;font-weight:700">This is the reflection we may LOOK TO AT ANY TIME TO see WHAT WE MAY OF what is known as God.
+</span><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-weight:700">
+LET IT BE SAID AGAIN that just as the whole encodes all of its parts, so too do all of its parts encode the whole.
+LET IT BE MADE CLEAR AGAIN that just as the composition of the parts are determined by the whole so too is the whole determined by the composition of its parts.
+
+</span><span class="f-body" style="--fs:27.82;color:#c2873f;font-weight:700">LET IT THEN BE MADE SO CLEAR IT NEVER BE WITHOUT REMINDER AGAIN that as a result of the whole being encoded with every individual part, the race and all of his conditions exists as a collection of the conditions of EACH PART AND EACH SELF.
+</span><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-weight:700">
+LET IT THEN BE MADE SO IT NEVER BE WITHOUT REMINDER AGAIN that the whole expands and contracts in correspondenc to the expansion and contraction of its parts.
+
+LET IT THEN BE MADE SO CLEAR IT NEVER BE WITHOUT REMINDER AGAIN that the whole that is seen is a reflection of its parts.
+
+</span><span class="f-body" style="--fs:27.82;color:#c2873f;font-weight:700">LET IT BE MADE SO CLEAR SO THAT IT NEVER NEEDS REMINDER AGAIN THAT ALL THAT MAN IS, ALL THAT HE EVER HAS BEEN AND ALL THAT HE EVER MAY BE IS WITHIN HIM.
+</span><span class="f-body" style="--fs:27.82;color:#f6e3b4;font-weight:700">
+LET IT BE KNOWN that all is the Mind and the Mind is all.
+
+THEN LET IT THEN BE SAID if all is Mind and MAN IS MIND THEN MAN IS ALL.
+
+This is what is meant when the materialist says “consciousness,” or the new-age practitioner, “manifestation.”
+
+ This is what is meant when the religious man says “God,” or the philosopher, “the ether” or “collective consciousness.”
+
+For the ones who do not let the man-made lines of the map stop him from exploring, and whose travels have come to the certainty of that which is, it is to love God by loving oneself, and by loving oneself loving all.
+
+FOR WHAT YOU DO TO YOURSELF YOU DO TO OTHERS, AND WHAT YOU DO TO OTHERS YOU DO TO YOURSELF. 
+
+FOR YOURSELF AND OTHERS ARE ONLY MYTH, ONLY IN MIND DO THEY EXIST.
+
+</span><span class="f-body" style="--fs:45.15;color:#c2873f;font-style:italic;font-weight:700">THIS IS THE SECRET OF THE AGES</span></div></div></section>
+<section class="page" id="p24" aria-label="Allegorical Truth"><div class="sheet"><img class="art" src="art/p24.webp" alt="" loading="lazy"><div class="tb" style="top:1.5682%;left:0.9843%;width:98.0315%;text-align:center;line-height:1.4;--fs:25.33;--h:1.00153"><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">LET IT BE KNOWN YOUR BODY AND ITS ILLUSIONS ARE THE ADVERSARY.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">THE ONE IN THE GRIPS OF THE BEAST IS THE ONE WHOSE CONSCIOUSNESS MAINLY RADIATES FEAR AND LIVES INWARDLY, THUS EXPRESSING OUTWARDLY, THROUGH THE LOWER CENTERS OF BEING IN THE NERVOUS PLEXUS AND GANGLIA (OR THE CHAKRAS) AND THEIR CORRESPONDING GOVERNORS IN THE BRAIN.
+
+</span><span class="f-body" style="--fs:25.33;color:#c2873f;font-style:italic;font-weight:700">THUS LET IT BE KNOWN THAT FOR THE ONE WHO IS HIS BODY HIS BODY IS HE.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">LET IT BE KNOWN YOUR MIND AND ALL ITS WONDER WHEN EXPRESSED IN ITS HIGHEST FORM IS CHRIST.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">THAT FROM COMPLETE CONTROL OF THOUGHT AND FAITH TO THE HIGHEST DEGREE ONE MAY COME TO EXPRESS THE HIGHEST FORM IN WHICH HIS VESSEL LIMITS HIM TO
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#c2873f;font-weight:700">THUS LET IT BE KNOWN THAT FOR THE ONE WHO IS HIS MIND HIS MIND IS HE.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">LET IT BE KNOWN THAT CONSCIOUSNESS AND ALL OF ITS INFINITE WONDERS IS GOD.
+
+ THE REFLECTION OF WHICH SHINES IN ALL, TO ALL, THROUGH ALL AND FOR ALL. 
+
+GOD AND HIS PERFECTION ARE SEEN IN FORM THROUGH OUT THE PATTERNS FOUND IN THE EXPRESSIONS OF ITS HIGHEST ORDER. ONE ONLY NEED TO TAKE A LOOK AT A TREE WITHOUT LEAVES AND THE NERVOUS SYSTEM AND THE FIRE IN HIS HEART WILL BE SET AFLAME. 
+
+THAT BEING THE FIRE THAT CORRESPONDS TO THE MEMORY FACULTIES OF THE HEART THAT GO BEYOND OUR GESTATION AND TIME ON EARTH. THIS IS OUR SOUL. THIS IS OUR ESSENCE. 
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">GOD IS CONSCIOUSNESS IS MIND IS THE GREAT BEYOND FROM ONE WHICH CAN PULL FROM, 
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">GLORY BE AS NOW IS THE TIME FOR ALL TO SEE THE INFINITE STORY WRITTEN IN LIGHT ACROSS ALL THE STARS NOW IT BE MADE CLEAR AND FOR ALL TO READ.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#c2873f;font-weight:700">THUS LET IT BE KNOWN THAT FOR ALL OF MAN THAT GOD IS HE AND HE IS GOD.
+</span><span class="f-body" style="--fs:25.33;color:#c2873f;font-weight:700">
+</span><span class="f-body" style="--fs:30.67;color:#c2873f;font-style:italic;font-weight:700">THIS BEING THE TRUTH OF THE SECRET OF THE AGES.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">GOD, CHRIST, THOSE WHO FOLLOW AND WITH ALL THEIR CORRESPONDENCES ARE THE GOOD GUYS.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">THE ADVERSARY AND THOSE WHO FOLLOW AND WITH ALL THEIR CORRESPONDENCES ARE THE BAD GUYS.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">THE GOOD GUYS AND THE BAD GUYS FIGHT THEIR ETERNAL WAR ACROSS THE BATTLEFIELD OF THE BODY.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">THE ONE IN THE CONQUERING POSITION BEING THE BODY IF THE MIND LISTENS TO ITS LIES OR THE ONE IN THE CONQUERING POSITION BEING THE HEART IF THE MIND LISTENS TO AND REMEMBERS WHAT IT KNOWS TO BE TRUE.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">ORDER IS THE MIND AND HEART AND THE TRUTH IT KNOWS IT TO BE. IT IS THE NERVOUS SYSTEM AND ITS COMPONENTS WORKING TO SEND ITS DIVINE MESSAGE OF HEALTH AND HEALING FROM THE BRAIN TO THE GENTILES, THE CELLS, IN THE HOPES OF RESTORING HARMONY OF ALL.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">CHAOS IS THE BODY AND THE FABRICATIONS AND STORIES IT MAKES APPEAR IN THE FORM OF NEGATIVE THOUGHTS TRYING TO OVERRIDE AND TAKE CONTROL OF ONE’S BEING.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">THE BASE OF THE SPINE IS HELL AND THE OPPOSITE END, THE BRAIN; THE MIND, IS HEAVEN. THIS IS WHY ONE IS BELOW AND ONE IS ABOVE.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">HEAVEN AND HELL ARE NOT BELOW THE EARTH OR SOMEWHERE ABOVE, NOR ARE THEY PLACES ONE GOES AFTER LIFE. 
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">HEAVEN AND HELL ARE PLACES ALONG THE SPINE WHERE MAN’S CONSCIOUSNESS, HIS STATES OF BEING EXPRESSES FROM.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">HEAVEN AND HELL ARE ARE PLACES THE MIND AND SOUL MAY FIND THEMSELVES OR GUIDE THEMSELVES TO.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">THIS IS THE TRUTH THAT HAS TAKEN FORM IN SYMBOLS AND ALLEGORIES ACROSS THE REALM THAT MAN HAS BEEN TRYING TO REMEMBER FOR HIMSELF AND EXPRESS TO HIS SIBLINGS FOR ALL HIS HISTORY.
+</span><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">
+</span><span class="f-body" style="--fs:49.33;color:#c2873f;font-style:italic;font-weight:700">THIS IS THE SECRET OF THE AGES
+</span></div></div></section>
+<section class="page" id="p25" aria-label="Message - Col"><div class="sheet"><img class="art" src="art/p25.webp" alt="" loading="lazy"><div class="tb one-line" style="top:1.4590%;left:10.8905%;width:78.2190%;text-align:left;line-height:1.4;--fs:56.00;--h:0.02899"><span class="f-body" style="--fs:56.00;color:#c2873f;font-style:italic;font-weight:700">A MESSAGE FROM THE TRUE CHILDREN OF THE LIGHT...</span></div><div class="tb" style="top:6.6647%;left:3.6636%;width:92.6729%;text-align:center;line-height:1.4;--fs:46.67;--h:0.08058"><span class="f-body" style="--fs:46.67;color:#f6e3b4;font-weight:700">LET IT BE KNOWN THE TRUE CHILDREN OF THE LIGHT WILL NO LONGER LET MAN CONTINUE TO LIVE OUTSIDE OF THE RADIANCE OF THE WARMTH FROM THE LIGHT OF THE HOME BUILT FOR HIM. </span></div><div class="tb" style="top:17.0295%;left:2.1414%;width:95.7173%;text-align:center;line-height:1.4;--fs:30.67;--h:0.78119"><span class="f-body" style="--fs:30.67;color:#f6e3b4;font-weight:700">LET IT BE KNOWN THAT THE REASON THESE TRUTHS BE REVEALED IN ALL THEIR ASPECTS AND NOT ONLY TO THOSE WHO MAY READ WHAT IS WRITTEN IN THE REFLECTION OF THE MOONLIGHT IS BECAUSE THE TRUE CHILDREN OF THE LIGHT WILL SEE TO IT THAT THE TRUE PROPHECY OF THE AGE BE FULFILLED.
+
+ THE PROPHECY OF THE AGE IS THE FULFILLMENT OF THE LAW OF HARMONY.
+
+IT IS THE RECONCILIATION OF THE SINS OF DECEPTION OF THE CHURCH AND OF SCIENCE.
+
+IT IS THE RECONCILIATION OF THE ABSOLUTE STATE OF DARKNESS MAN HAS LET HIS WORLD SINK BY RISING, IN PROPORTION TO THE DEPTHS, TO NEW HEIGHTS.
+
+FOR AS THIS AGE FALLS IT MAY BE ONE IN ONE HUNDRED WHO TRULY KNOW GOD AND ONE IN ONE TEN WHO KNOW OF GOD YET AS WE ASCEND THROUGH THE NEW AGE THIS NUMBER WILL GROW UNTIL IT REACHES ITS HEIGHT.
+
+IT IS THE RECONCILIATION OF THE SINS OF DECEPTION OF ALL BUT A FRAGMENT OF SCIENCE FOR PRACTICING REASON WITH NO GOD - THE DEFINITION OF BLACK MAGIC. 
+
+IT IS THE RECONCILIATION OF THE SINS OF DECEPTION OF ALL BUT A FRAGMENT OF THE CHURCH TO THE IMPIOUS “PIOUS” ACTORS WHO THINK THEIR RELIGION IS </span><span class="f-body" style="--fs:30.67;color:#f6e3b4;font-style:italic;font-weight:700">THE</span><span class="f-body" style="--fs:30.67;color:#f6e3b4;font-weight:700"> TRUTH AND NOT </span><span class="f-body" style="--fs:30.67;color:#f6e3b4;font-style:italic;font-weight:700">A PART OF THE</span><span class="f-body" style="--fs:30.67;color:#f6e3b4;font-weight:700"> TRUTH, THAT GOD ONLY SPOKE HIS WORD TO THEIR RELIGION AND THAT NOT ALL MEN ARE HIS CHILDREN AND NOT ALL HAVE HEARD HIS WHISPER AND THEN TO THE ONES WHO POSE AS TEACHERS OF GOD AND WHETHER OUT OF INTENTION OR IGNORANCE DECEIVE THOSE WHO SEEK HIM. FOR MAN HAS A SAY IN HIS LEVEL OF IGNORANCE THROUGH USE OF HIS MIND SO WHETHER FROM INTENTION OR IGNORANCE IS IT NOT STILL DECEPTION?  BOTH OF THE SINS LISTED ABOVE ARE IMPIETY OF THE HIGHEST DEGREE AND THEIR SINS WILL BE PUNISHED.
+
+IT IS THE RECONCILIATION OF ALL THE PIECES OF THE PUZZLE OF GOD’S WORD SCATTERED ACROSS ALL HIS CHILDREN AND THE RECONCILIATION OF SCIENCE AND RELIGION BY THE SCIENTIST REALIZING EVERY DAY HE IS WORKING TO BETTER UNDERSTAND AND ‘PROVE’ THAT OF HIS BROTHER AND HIS BROTHER REALIZING THE TOOL HIS BROTHER MAY HAVE TO HELP ‘PROVE’ THAT WHICH IS DEAR TO HIM. 
+
+THEN IN PROPORTION TO THE DEPTHS WE’VE FALLEN WE WILL RESURRECT AND FROM OUR REBIRTH RISE TO NEW HEIGHTS IN WHICH WE ALL MAY BE THAT MUCH CLOSER TO GOD.
+
+FOR THE TRUE CHILDREN OF THE LIGHT LOVE GOD SO MUCH THAT SEEING HIS ABSENCE IN OUR SIBLINGS PAINS US IN PROPORTION TO THE BLISS OF GOD’S PRESENCE AND WE WILL SEE TO IT THAT THERE WILL BE LIGHT.
+
+FOR THE TRUE CHILDREN OF THE LIGHT WOULD RATHER LET THE FLOWER OF OUR BEING WITHER IN A WAR-TORN AND FROZEN, YET TOO HOT TO BARE, WASTELAND FOR ETERNITY THAN SEE THE REFLECTION FORMED FROM THE SORROWS AND SUFFERING OF OUR SIBLINGS.
+
+FOR THE TRUE CHILDREN OF THE LIGHT KNOW ONE PLUS ONE TO BE THREE AND THAT FOR THE ONE WITH GOD THAT GOD IS ALWAYS WITH THEE.</span></div></div></section>
+<section class="page page-diagram" id="p26" aria-label="3 Pillars - Harmony"><div class="sheet"><img class="full" src="art/p26-full.webp" alt="" loading="lazy"><img class="art" src="art/p26.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.5685%;left:5.9455%;width:88.1090%;text-align:center;line-height:1.4;--fs:46.67;--h:0.02416"><span class="f-body" style="--fs:46.67;color:#c2873f;font-style:italic;font-weight:700">THE THREE PILLARS OF HARMONY...</span></div><div class="tb" style="top:3.5765%;left:1.5233%;width:96.9534%;text-align:center;line-height:1.4;--fs:25.33;--h:0.11933"><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">LET IT BE KNOWN the state of the whole, and in eternal emanation from, is harmony. 
+
+Just as the whole is encoded by all OF its parts so TOO ARE ALL partS encoded WITH the whole. THUS FOUND IN EACH PART EXISTS A SHATTERED REFLECTION OF ALL THAT IS. THROUGH THIS FRACTAL PIECE OF THE HOLOGRAM IS FOUND A REFLECTION OF THE WHOLE IN WHICH MAN MAY ALWAYS RETURN TO HIS HOME AMONGST THE STARS AND TO HIS HEAVENLY FATHER.
+
+therefore the ONLY WORTHWHILE PURSUIT OF ANY PART is to either MOVE toward or MAINTAIN THE HARMONY OF ALL THAT IS. THIS PURSUIT BEING, WHETHER REMEMBERED OR NOT, THE INNATE DESIRE AND NATURAL PURPOSE OF ALL THAT IS.</span></div><div class="tb" style="top:16.5214%;left:12.1629%;width:80.3449%;text-align:center;line-height:1.28;--fs:22.71;--h:0.02439"><span class="f-body" style="--fs:22.71;color:#ffffff;font-weight:700">LET IT BE KNOWN this law applies in all and in proportion to itself manifesting at the level of the atomic, cellular, individual, societal, global, universal and applies to everything between and beyond.</span></div><div class="tb" style="top:22.4894%;left:1.5233%;width:45.8074%;text-align:justify;line-height:1.4;--fs:25.33;--h:0.07376"><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">LET IT BE KNOWN the only reason any part MAY NOT BE IN alignment with ITS TRUE PURPOSE IS BECAUSE IT HAS FORGOTTEN, DOES NOT OR CAN NOT, AS WAS INTENDED, ACCESS THE HARMONIOUS MESSAGE ENCODED WITHIN each part AND IN CONSTANT EMANATION FROM THE WHOLE</span></div><div class="tb" style="top:31.3841%;left:1.5233%;width:35.8370%;text-align:left;line-height:1.28;--fs:22.67;--h:0.11249"><span class="f-body" style="--fs:22.67;color:#ffffff;font-weight:700">LET IT BE KNOWN this law applies in all and in proportion to itself manifesting in damaged cells when they do not receive the message from the brain, a lost man when he forgets that which he is, or a chaotic world when its inhabitants forget what once was and what will always be returned to and applies to everything between and beyond.
+</span></div><div class="tb" style="top:22.4894%;left:52.3354%;width:46.1413%;text-align:justify;line-height:1.4;--fs:25.33;--h:0.08895"><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">LET IT BE KNOWN That INDIVIDUAL parts may REMEMBER, AND THUS RETURN TO THE CONSEQUENCES OF harmony THROUGH OVERCOMING THE OBSTACLES PREVENTING THEM FROM RECEIVING, AS IT WAS INTENDED, THE HARMONIOUS MESSAGE ENCODED WITHIN each part AND IN CONSTANT EMANATION FROM THE WHOLE</span></div><div class="tb" style="top:32.0456%;left:61.7336%;width:35.7490%;text-align:right;line-height:1.28;--fs:22.67;--h:0.06215"><span class="f-body" style="--fs:22.67;color:#ffffff;font-weight:700">LET IT BE KNOWN this law applies in all and in proportion to itself manifesting as individual cells, men, nations, worlds and applies to everything between and beyonD.
+</span></div><div class="tb one-line" style="top:34.7341%;left:33.0131%;width:32.5848%;text-align:center;line-height:1.4;--fs:38.67;--h:0.02008"><span class="f-body" style="--fs:38.67;color:#f6e3b4;font-style:italic;font-weight:700">THE FIRST...</span></div><div class="tb one-line" style="top:49.7260%;left:0.3472%;width:36.7240%;text-align:left;line-height:1.4;--fs:38.67;--h:0.02008"><span class="f-body" style="--fs:38.67;color:#f6e3b4;font-style:italic;font-weight:700">THE SECOND...</span></div><div class="tb one-line" style="top:49.7260%;left:79.6894%;width:25.6370%;text-align:center;line-height:1.4;--fs:38.67;--h:0.02008"><span class="f-body" style="--fs:38.67;color:#f6e3b4;font-style:italic;font-weight:700">THE THIRD...</span></div></div></section>
+<section class="page page-diagram" id="p27" aria-label="3 Pillars Of Being"><div class="sheet"><img class="full" src="art/p27-full.webp" alt="" loading="lazy"><img class="art" src="art/p27.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.2363%;left:5.9455%;width:88.1090%;text-align:center;line-height:1.4;--fs:46.67;--h:0.02416"><span class="f-body" style="--fs:46.67;color:#f6e3b4;font-style:italic;font-weight:700">THE 3 PILLARS OF HEALING...</span></div><div class="tb one-line" style="top:4.3173%;left:36.6383%;width:27.4898%;text-align:center;line-height:1.4;--fs:56.00;--h:0.02899"><span class="f-body" style="--fs:56.00;color:#c2873f;font-style:italic;font-weight:700">THE EMANATION...</span></div><div class="tb" style="top:6.8087%;left:0.9843%;width:97.6992%;text-align:center;line-height:1.4;--fs:18.67;--h:0.04352"><span class="f-body" style="--fs:18.67;color:#f6e3b4;font-weight:700">EMANATION IS THE ETERNAL MESSAGE OF HARMONY FROM THE SOURCE.
+
+THE SOURCE BEING THE BRAIN AND AT THIS NODE OF POLARITY THE PITUITARY GLAND. THIS GLAND BEING PART OF THE ENDOCRINE SYSTEM AND GOVERNING MANS SECRETION / REGULATION OF HORMONES. </span></div><div class="tb one-line" style="top:11.9926%;left:2.0829%;width:28.5706%;text-align:left;line-height:1.4;--fs:56.00;--h:0.02899"><span class="f-body" style="--fs:56.00;color:#c2873f;font-style:italic;font-weight:700">THE REFLECTION...</span></div><div class="tb" style="top:15.2217%;left:2.0829%;width:47.1452%;text-align:left;line-height:1.4;--fs:18.67;--h:0.13380"><span class="f-body" style="--fs:18.67;color:#f6e3b4;font-weight:700">REFLECTION IS THE ENCODED LIGHT THAT RETURNS TO THE SOURCE WITH THE MESSAGE OF THE NODES OR ENDPOINTS.
+
+THE SOURCE BEING THE BRAIN AND AT THIS NODE OF POLARITY THE PINEAL GLAND. THE PINEAL GLAND GOVERNS MAN’S CIRCADIAN RYTHYM AND THE SECRETION AND REGULATION OF NEUROTRANSMITTERS ALLOWING MAN TO SEE WITH HIS “EYE THAT BE SINGLE”.
+
+THIS IS WHAT IS MEANT BY THIRD EYE OR BY MAN SEEING AS GOD DOES. NOT AS HE VS. ME AND DUALITY BUT WITH LOVE FOR ALL. 
+
+IT IS BY THIS EYE THAT ONE OVERCOMES ALL ILLUSIONS OF TIME AND SPACE.</span></div><div class="tb one-line" style="top:11.9926%;left:71.4691%;width:27.5467%;text-align:justify;line-height:1.4;--fs:56.00;--h:0.02899"><span class="f-body" style="--fs:56.00;color:#c2873f;font-style:italic;font-weight:700">THE REFRACTION...</span></div><div class="tb" style="top:15.1591%;left:50.3832%;width:48.3003%;text-align:right;line-height:1.4;--fs:18.67;--h:0.20150"><span class="f-body" style="--fs:18.67;color:#f6e3b4;font-weight:700">REFRACTION IS WHAT WE MAY SEE IN THE ETERNAL NOW SPOTTED BEFORE THE PASSING OF THE NEXT EMANATION AND THE COMING OF THE LAST REFLECTION. 
+
+THIS REFRACTION FORMS A “NEURAL CIRCUIT” OR MAKES UP ONE’S “NEURAL CIRCUITRY”
+
+THIS CIRCUIT IS THE TRUE NATURE OF MAN’S NERVOUS SYSTEM
+
+WHAT MAY BE VIEWED IN THIS REFRACTION IS THE TRUE NATURE OF MAN’S BEING.
+
+THE COMBINATION OF THE NEURAL CIRCUITRY OF ALL MEN IS REFLECTED IN THE STARS AND WHAT IS REFERRED TO AS CONSCIOUSNESS, MANIFESTATION AND ASTROLOGY. 
+
+</span><span class="f-body" style="--fs:18.67;color:#f6e3b4;font-style:italic;font-weight:700">THIS IS THE SECRET OF THE AGES.
+</span><span class="f-body" style="--fs:18.67;color:#f6e3b4;font-weight:700">
+FOR HOW BEAUTIFUL DOES THE NIGHT SKY ILLUMINATED IN FULL BY THE RADIANCE OF ALL THE STARS OF ALL THEAT EACH AND EVERY ONE OF US IS MEANT TO BE SOUND? 
+
+</span></div></div></section>
+<section class="page page-diagram" id="p28" aria-label="Floormap Of Eternal Temple"><div class="sheet"><img class="full" src="art/p28-full.webp" alt="" loading="lazy"><img class="art" src="art/p28.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.3468%;left:27.5143%;width:43.7645%;text-align:center;line-height:1.4;--fs:45.33;--h:0.02341"><span class="f-body" style="--fs:45.33;color:#c2873f;font-style:italic;font-weight:700;text-decoration:underline">FLOORPLAN OF THE ETERNAL TEMPLE:</span></div><div class="tb" style="top:10.9202%;left:1.6204%;width:24.8757%;text-align:center;line-height:1.4;--fs:37.33;--h:0.49329;opacity:0.50"><span class="f-body" style="--fs:37.33;color:#f6e3b4;font-weight:700">5
+senses / elements / number of man / fingers&amp;toes / extremities / orifice on face
++ 
+7
+chakras / colors of rainbow / days of creation / archangels / alchemical elements / scales of harmony / ancient planetary bodies
+=
+12
+crown of / zodiac / disciples / knights of the round table / tribes / </span></div><div class="tb" style="top:10.9202%;left:70.6614%;width:27.9588%;text-align:center;line-height:1.4;--fs:37.33;--h:0.22245;opacity:0.50"><span class="f-body" style="--fs:37.33;color:#f6e3b4;font-weight:700">5 
+endpoints / nodes of polarity
++ 
+7 
+governors of nervous / endocrine systems
+= 
+12 
+cranial nerves</span></div><div class="tb" style="top:75.8161%;left:2.2651%;width:95.4698%;text-align:center;line-height:1.4;--fs:29.33;--h:0.22879"><span class="f-body" style="--fs:29.33;color:#c2873f;font-weight:700">MAN IS MADE IN THE IMAGE AND LIKENESS OF THAT WHICH HE IS COMPOSED.
+THAT WHICH HE IS COMPOSED IS REVEALED IN THE REFLECTIONS IN ALL, THROUGH ALL, TO ALL, FOR ALL.
+
+FOR, AS THE PART OF THE WHOLE HE IS, IN HIM CONTAINS THE WHOLE AND THEREBY REMAINS FOREVER THE KEY TO FIND HIS WAY BACK IN HARMONY WITH THE WHOLE IN WHICH IT IS A PART.
+
+ONCE HE KNOWS OF THE WHOLE BY MASTERING THE PART, OF WHICH HE IS, THEN HE HAS SEEN </span><span class="f-body" style="--fs:29.33;color:#c2873f;font-style:italic;font-weight:700">“THE MAP OF THE ALL”</span><span class="f-body" style="--fs:29.33;color:#c2873f;font-weight:700">
+
+</span><span class="f-body" style="--fs:29.33;color:#c2873f;font-weight:700">AND BY HAVING SEEN </span><span class="f-body" style="--fs:29.33;color:#c2873f;font-style:italic;font-weight:700">“THE MAP OF THE ALL”</span><span class="f-body" style="--fs:29.33;color:#c2873f;font-weight:700">  ONE MAY KNOW THAT EACH NODE IS A PART AND EACH NODE THE WHOLE. SINCE EACH NODE AND EACH PART EXIST IN THE WHOLE THEY HAVE A CORRESPONDING PART THROUGH THE ABYSS OF THE WHOLE AND IT IS THROUGH THIS CORRESPONDENCE THAT WE MAY HEAL ANY AILMENT WITHOUT FURTHER STRESS, TENSION OR INJURY APPLIED TO IT AND USING THE MANIPULATION OF THE HEALTHY ASPECTS TO FURTHER HEAL THE UNEHALTHY ONES.</span></div></div></section>
+<section class="page" id="p29" aria-label="Secret Of The Ages / Realms"><div class="sheet"><img class="art" src="art/p29.webp" alt="" loading="lazy"><div class="tb" style="top:1.2089%;left:2.8028%;width:94.8736%;text-align:center;line-height:1.4;--fs:42.15;--h:0.22719"><span class="f-body" style="--fs:43.48;color:#f6e3b4;font-style:italic;font-weight:700">LET IT BE KNOWN THAT WHAT FOLLOWS  IS THE SECRET OF THE AGES...
+</span><span class="f-body" style="--fs:42.15;color:#c2873f;font-style:italic;font-weight:700">THE CORRESPONDENCE UPON WHICH THE REFRACTION HAS TO THE EMANATION CORRESPONDS TO THE GIFTS THE FATHER GIVES TO HIS SON.
+
+THE GIFTS THE FATHER GIVES TO HIS SON CORRESPOND TO THE ASPECTS OF HIS BEING IN WHICH IT IS THEN UPON TO HIM TO UNLOCK AND OR ALLOW TO REMAIN DORMANT.
+
+THE ASPECTS OF HIS BEING IN WHICH HE MAY UNLOCK CORRESPOND TO THEIR GOVERNORS IN THE BRAIN AND VARIOUS NERVOUS PLEXUS AND GANGLIA OF THE SPINE.</span></div><div class="tb one-line" style="top:26.4784%;left:3.4722%;width:92.8909%;text-align:center;line-height:1.4;--fs:49.33;--h:0.02567"><span class="f-body" style="--fs:49.33;color:#f6e3b4;font-style:italic;font-weight:700">THE MEANING OF WHAT IS KNOWN AS HEAVEN</span></div><div class="tb" style="top:29.0449%;left:1.7301%;width:96.3750%;text-align:justify;line-height:1.4;--fs:44.82;--h:0.10375"><span class="f-body" style="--fs:44.82;color:#c2873f;font-weight:700">HEAVEN IS AMONGST THE STARS BECAUSE AMONGST THE STARS IS ALL THAT EXISTS AND FOUND IN ALL THAT EXISTS IS ALL THAT EVER HAS BEEN, ALL THAT EVER MAY BE AND ALL THERE EVER IS THAT SHINES THROUGH THE REFRACTION OF THE ETERNAL NOW.</span></div><div class="tb one-line" style="top:42.1838%;left:5.0120%;width:89.8112%;text-align:center;line-height:1.4;--fs:49.33;--h:0.02567"><span class="f-body" style="--fs:49.33;color:#f6e3b4;font-style:italic;font-weight:700">THE MEANING OF WHAT IS KNOWN AS EARTH</span></div><div class="tb" style="top:44.7504%;left:2.0613%;width:95.7126%;text-align:justify;line-height:1.4;--fs:44.82;--h:0.13066"><span class="f-body" style="--fs:44.82;color:#c2873f;font-weight:700">EARTH IS A PLACE FOR MAN WHO HAS NOT YET BEGUN HIS JOURNEY.
+ALL MEN OF THE EARTH WILL ALWAYS BE PROVIDED FOR BY THEIR MOTHER AND IF SOUGHT GIVEN ALL BY THEIR FATHER. FOR AS LONG AS MAN HAS THEIR MOTHER THEN THROUGH HER LOVE THEY ARE GIVEN THE POWER TO SPEAK OVER THINGS BIG AND SMALL.</span></div><div class="tb one-line" style="top:60.1165%;left:2.8028%;width:94.2297%;text-align:center;line-height:1.4;--fs:49.33;--h:0.02567"><span class="f-body" style="--fs:49.33;color:#f6e3b4;font-style:italic;font-weight:700">THE MEANING OF WHAT IS KNOWN AS HELL</span></div><div class="tb" style="top:62.6831%;left:2.0613%;width:95.7126%;text-align:justify;line-height:1.4;--fs:44.82;--h:0.10375"><span class="f-body" style="--fs:44.82;color:#c2873f;font-weight:700">HELL IS A FROZEN PLACE AND ONE WHERE MANY ASPECTS OF MAN’S BEING LIE DORMANT SITTING CRYSTALLIZED IN THE DARKNESS OF THE TERRORS OF WHAT MAY HAVE BEEN UNTIL THEY REMEMBER THE LIGHT OR THEIR FATHER DEPARTS FROM THEM AND THEY ARE CAST TO THE ABYSS.</span></div><div class="tb one-line" style="top:77.1167%;left:5.8631%;width:88.1090%;text-align:center;line-height:1.4;--fs:49.33;--h:0.02567"><span class="f-body" style="--fs:49.33;color:#f6e3b4;font-style:italic;font-weight:700">THE MEANING OF WHAT IS KNOWN AS ABYSS</span></div><div class="tb" style="top:79.6774%;left:1.8957%;width:96.0438%;text-align:justify;line-height:1.4;--fs:44.82;--h:0.15757"><span class="f-body" style="--fs:44.82;color:#c2873f;font-weight:700">ABYSS IS PLACE WHO’S OVERSEER EVEN OUR FATHER SEEKS FOR FORGIVENESS. THE ABYSS IS A PLACE OF FORMLESS DUST WAITING FOR THE DAY THE PULL OF ORDER SHAPES IT INTO ITS HIGHEST EXPRESSION. THE ABYSS IS THE PLACE WHERE ALL INCLUDING YOU AND I WERE FORMED AND WHERE YOU WILL GO AFTER YOUR FORM. ABYSS IS WHERE THE LAW LIVES EVEN WHEN THERE IS NOW LAW.</span></div></div></section>
+<section class="page page-image" id="p31" aria-label="9 Points Of Manipulation Of The Nodes Of The Eyes"><div class="sheet"><img class="art" src="art/p31.webp" alt="9 POINTS OF MANIPULATION OF THE NODES OF THE EYES H D E W H-E H-W D-E D-W (left) (right) 1-4.
+ HEIGHT
+WEST
+DEPTH
+EAST 5--8
+ HEIGHT - WEST
+HEIGH T- EAST
+DEPTH - WEST 
+DEPTH - EAST 9 
+CROSS EYED" loading="lazy"></div></section>
+<section class="page page-diagram" id="p32" aria-label="3 Pillars - Brian"><div class="sheet"><img class="full" src="art/p32-full.webp" alt="" loading="lazy"><img class="art" src="art/p32.webp" alt="" loading="lazy"><div class="tb one-line" style="top:0.5685%;left:5.9455%;width:88.1090%;text-align:center;line-height:1.4;--fs:46.67;--h:0.02416"><span class="f-body" style="--fs:46.67;color:#c2873f;font-style:italic;font-weight:700">THE THREE PILLARS I FORMED UPON WHICH THOU SHALL REMAIN...</span></div><div class="tb" style="top:3.5765%;left:1.5233%;width:96.9534%;text-align:center;line-height:1.4;--fs:25.33;--h:0.11933"><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">LET IT BE KNOWN the state of the whole, and in eternal emanation from, is harmony. 
+
+Just as the whole is encoded by all OF its parts so TOO ARE ALL partS encoded WITH the whole. THUS FOUND IN EACH PART EXISTS A SHATTERED REFLECTION OF ALL THAT IS. IT IS THROUGH THIS FRACTAL PIECE OF THE HOLOGRAM IS FOUND A REFLECTION OF THE WHOLE IN WHICH MAN MAY ALWAYS RETURN TO HIS HOME AMONGST THE STARS AND TO HIS HEAVENLY FATHER.
+
+therefore the ONLY WORTHWHILE PURSUIT OF ANY PART is to either MOVE toward or MAINTAIN THE HARMONY OF ALL THAT IS. THIS PURSUIT BEING, WHETHER REMEMBERED OR NOT, THE INNATE DESIRE AND NATURAL PURPOSE OF ALL THAT IS.</span></div><div class="tb" style="top:16.5214%;left:12.1629%;width:80.3449%;text-align:center;line-height:1.28;--fs:22.71;--h:0.04956"><span class="f-body" style="--fs:22.71;color:#ffffff;font-weight:700">LET IT BE KNOWN this law applies in all and in proportion to itself manifesting at the level of the atomic, cellular, individual, societal, global, universal and applies to everything between and beyond.
+
+</span><span class="f-body" style="--fs:22.71;color:#ffffff;font-weight:700">LET IT BE KNOWN this is the word AS I HAVE FORMED IT and the word spoken BECOMES law.</span></div><div class="tb" style="top:22.4894%;left:1.5233%;width:45.8074%;text-align:justify;line-height:1.4;--fs:25.33;--h:0.07376"><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">LET IT BE KNOWN the only reason any part MAY NOT BE IN alignment with ITS TRUE PURPOSE IS BECAUSE IT HAS FORGOTTEN, DOES NOT OR CAN NOT, AS WAS INTENDED, ACCESS THE HARMONIOUS MESSAGE ENCODED WITHIN each part AND IN CONSTANT EMANATION FROM THE WHOLE</span></div><div class="tb" style="top:31.3841%;left:1.5233%;width:35.8370%;text-align:left;line-height:1.28;--fs:22.67;--h:0.13767"><span class="f-body" style="--fs:22.67;color:#ffffff;font-weight:700">LET IT BE KNOWN this law applies in all and in proportion to itself manifesting in damaged cells when they do not receive the message from the brain, a lost man when he forgets that which he is, or a chaotic world when its inhabitants forget what once was and what will always be returned to and applies to everything between and beyond.
+
+</span><span class="f-body" style="--fs:22.67;color:#ffffff;font-weight:700">LET IT BE KNOWN this is the word AS I HAVE FORMED IT and the word WHEN spoken BECOMES law.</span></div><div class="tb" style="top:22.4894%;left:52.3354%;width:46.1413%;text-align:justify;line-height:1.4;--fs:25.33;--h:0.08895"><span class="f-body" style="--fs:25.33;color:#f6e3b4;font-weight:700">LET IT BE KNOWN That INDIVIDUAL parts may REMEMBER, AND THUS RETURN TO THE CONSEQUENCES OF harmony THROUGH OVERCOMING THE OBSTACLES PREVENTING THEM FROM RECEIVING, AS IT WAS INTENDED, THE HARMONIOUS MESSAGE ENCODED WITHIN each part AND IN CONSTANT EMANATION FROM THE WHOLE</span></div><div class="tb" style="top:32.0456%;left:61.7336%;width:35.7490%;text-align:right;line-height:1.28;--fs:22.67;--h:0.08732"><span class="f-body" style="--fs:22.67;color:#ffffff;font-weight:700">LET IT BE KNOWN this law applies in all and in proportion to itself manifesting as individual cells, men, nations, worlds and applies to everything between and beyonD.
+
+</span><span class="f-body" style="--fs:22.67;color:#ffffff;font-weight:700">LET IT BE KNOWN this is the word AS I HAVE spoken IT and the word WHEN spoken BECOMES law.</span></div><div class="tb one-line" style="top:34.7341%;left:33.0131%;width:32.5848%;text-align:center;line-height:1.4;--fs:38.67;--h:0.02008"><span class="f-body" style="--fs:38.67;color:#f6e3b4;font-style:italic;font-weight:700">THE FIRST...</span></div><div class="tb one-line" style="top:49.7260%;left:0.3472%;width:36.7240%;text-align:left;line-height:1.4;--fs:38.67;--h:0.02008"><span class="f-body" style="--fs:38.67;color:#f6e3b4;font-style:italic;font-weight:700">THE SECOND...</span></div><div class="tb one-line" style="top:49.7260%;left:79.6894%;width:25.6370%;text-align:center;line-height:1.4;--fs:38.67;--h:0.02008"><span class="f-body" style="--fs:38.67;color:#f6e3b4;font-style:italic;font-weight:700">THE THIRD...</span></div></div></section>
+  </main>
+
+  <p class="note">
+    <strong>Disclaimer:</strong> The code of this site is AI generated. All of the ideas, words and artwork in this book are human made.
+  </p>
+
+  <script>
+    // Page picker jumps to the chosen page, and follows along as you scroll
+    const toc = document.getElementById('toc');
+    toc.addEventListener('change', () => {
+      document.getElementById(toc.value).scrollIntoView({ behavior: 'smooth' });
+    });
+    const seen = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) toc.value = e.target.id; });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    document.querySelectorAll('.page').forEach(p => seen.observe(p));
+
+    // The web fonts run slightly wider than Canva's, so on wide screens each text
+    // box is scaled down just enough to fit the same space it has in the book
+    function fitText() {
+      const wide = window.innerWidth > 700;
+      document.querySelectorAll('.tb').forEach(tb => {
+        tb.style.setProperty('--k', 1);
+        if (!wide) return;
+        const sheet = tb.closest('.sheet');
+        const room = parseFloat(getComputedStyle(tb).getPropertyValue('--h')) * sheet.clientHeight;
+        let k = 1;
+        const keepLines = tb.classList.contains('one-line') || tb.classList.contains('verse');
+        while (k > 0.6 && (tb.scrollHeight > room * 1.04 || (keepLines && tb.scrollWidth > tb.clientWidth + 1))) {
+          k -= 0.01;
+          tb.style.setProperty('--k', k.toFixed(2));
+        }
+      });
+    }
+    document.fonts.ready.then(fitText);
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(fitText, 150);
+    });
+  </script>
+</body>
+</html>
